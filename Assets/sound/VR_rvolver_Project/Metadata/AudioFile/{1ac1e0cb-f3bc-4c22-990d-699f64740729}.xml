@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{1ac1e0cb-f3bc-4c22-990d-699f64740729}">
+		<property name="assetPath">
+			<value>Cathedral of Static Glass (1).mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>199.15199999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2539fe93-9e72-440e-af0f-851b727780ba}</destination>
+		</relationship>
+	</object>
+</objects>
