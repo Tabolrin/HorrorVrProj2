@@ -433,7 +433,15 @@ MonoBehaviour:
       m_Id: fb9f9048-1eae-43a0-9283-daa8c6bd070f
       m_Processors: 
       m_Interactions: 
-      m_SingletonActionBindings: []
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 310f7d18-4e19-4589-a22c-05ef2088f8ce
+        m_Path: <XRController>/devicePosition
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Position
+        m_Flags: 0
       m_Flags: 0
     m_Reference: {fileID: 0}
   m_RotationInput:
@@ -445,7 +453,15 @@ MonoBehaviour:
       m_Id: 7bb30964-4b19-4062-8c9d-65e7868bedea
       m_Processors: 
       m_Interactions: 
-      m_SingletonActionBindings: []
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: a931ac84-1605-4371-b6c6-5c85bca67737
+        m_Path: <TrackedDevice>/deviceRotation
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Rotation
+        m_Flags: 0
       m_Flags: 0
     m_Reference: {fileID: 0}
   m_TrackingStateInput:
@@ -457,7 +473,15 @@ MonoBehaviour:
       m_Id: 1006f001-6c7d-43aa-9a1d-78ca3300ddf2
       m_Processors: 
       m_Interactions: 
-      m_SingletonActionBindings: []
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 8097c977-1c9e-45d7-91e6-7fee7812ca3e
+        m_Path: <XRController>/trackingState
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Tracking State
+        m_Flags: 0
       m_Flags: 0
     m_Reference: {fileID: 0}
   m_PositionAction:
