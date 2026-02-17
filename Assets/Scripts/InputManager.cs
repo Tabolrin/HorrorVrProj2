@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Pistol : MonoBehaviour
+public class InputManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -11,12 +11,6 @@ public class Pistol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-    
-    public void Shoot()
-    {
-        Debug.Log("Shoot!");
         
     }
 }
