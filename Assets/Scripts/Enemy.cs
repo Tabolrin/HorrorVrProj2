@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    [SerializeField] private GameObject RayInteractor;
+    [SerializeField] private float _health = 10f;
+    private bool _isDead = false;
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,5 +16,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TakeHit()
+    {
+        throw new System.NotImplementedException();
     }
 }

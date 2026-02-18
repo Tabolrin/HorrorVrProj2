@@ -1,16 +1,19 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private InputActionReference _shootAction;    
+    [SerializeField] private Pistol _pistol;
+    
+    void Awake()
     {
-        
+        _shootAction.action.performed += OnShoot;
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    private void OnShoot(InputAction.CallbackContext context)
     {
-        
+        _pistol.Shoot();
     }
 }
