@@ -20,6 +20,15 @@ public class Enemy : MonoBehaviour
 
     public void TakeHit()
     {
-        throw new System.NotImplementedException();
+        _health -= 1f;
+        
+        if (_health <= 0f)
+            Die();
+    }
+    
+    private void Die()
+    {
+        _isDead = true;
+        gameObject.SetActive(false);
     }
 }
