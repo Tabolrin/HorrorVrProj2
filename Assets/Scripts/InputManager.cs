@@ -16,4 +16,9 @@ public class InputManager : MonoBehaviour
     {
         _pistol.Shoot();
     }
+    
+    private void OnDisable()
+    {
+        _shootAction.action.performed -= OnShoot;
+    }
 }

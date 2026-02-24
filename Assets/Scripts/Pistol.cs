@@ -27,7 +27,7 @@ public class Pistol : MonoBehaviour
         if (Physics.Raycast(_firePoint.position, transform.forward, out hitInfo, _gunProperties._range, _gunProperties.enemyLayer))
         {
             OnEnemyHit(hitInfo.collider.GetComponent<Enemy>());
-            
+            _lastFireTime = Time.time;
         }
     }
     
