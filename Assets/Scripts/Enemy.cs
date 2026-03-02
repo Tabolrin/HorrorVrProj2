@@ -4,7 +4,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
-    [SerializeField] private Vector3 targetPosition;
+    [SerializeField] private Transform targetPosition;
 
     private Transform _player;
     private bool _arrived;
@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
 
     private void MoveToTarget()
     {
-        Vector3 dir = targetPosition - transform.position;
+        Vector3 dir = targetPosition.position - transform.position;
         dir.y = 0f;
 
         if (dir.magnitude <= data.arrivedThreshold)
@@ -102,8 +102,8 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(targetPosition, 0.3f);
-        Gizmos.DrawLine(transform.position, targetPosition);
+        Gizmos.DrawSphere(targetPosition.position, 0.3f);
+        Gizmos.DrawLine(transform.position, targetPosition.position);
 
         if (!Application.isPlaying || data == null) return;
         Gizmos.color = Color.Lerp(Color.red, Color.green, _health / data.maxHealth);
