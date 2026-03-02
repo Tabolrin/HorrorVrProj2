@@ -87,12 +87,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.tripolygon.umodeler-x": {
-      "version": "file:com.tripolygon.umodeler-x-1.1.32-pro/com.tripolygon.umodeler-x-1.1.32-pro.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {}
-    },
     "com.unity.ai.navigation": {
       "version": "2.0.11",
       "depth": 0,

@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "com.meta.xr.sdk.all": "85.0.0",
-    "com.tripolygon.umodeler-x": "file:com.tripolygon.umodeler-x-1.1.32-pro/com.tripolygon.umodeler-x-1.1.32-pro.tgz",
     "com.unity.ai.navigation": "2.0.11",
     "com.unity.burst": "1.8.28",
     "com.unity.cinemachine": "3.1.5",
