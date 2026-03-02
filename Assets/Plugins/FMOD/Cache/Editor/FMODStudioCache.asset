@@ -15,10 +15,10 @@ MonoBehaviour:
   Path: Assets/sound/VR_rvolver_Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639065093137372965
+  lastModified: 639080681531381393
   FileSizes:
   - Name: Desktop
-    Value: 2554496
+    Value: 4167904
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -37,16 +37,46 @@ MonoBehaviour:
   - {fileID: -1084457952723205888}
   EditorEvents:
   - {fileID: 3390862979002372150}
+  - {fileID: 1386618941424126748}
   EditorParameters: []
   MasterBanks:
   - {fileID: -1084457952723205888}
   StringsBanks:
   - {fileID: 2424356459332000662}
   cacheVersion: 131858
-  cacheTime: 639065093137372965
+  cacheTime: 639080681531395883
   SerializableEventsDict:
   - key: event:/test
     index: 0
+  - key: event:/sound_truak_takic
+    index: 1
+--- !u!114 &1386618941424126748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/sound_truak_takic
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/sound_truak_takic
+  Guid:
+    Data1: 733469094
+    Data2: 1295285516
+    Data3: 73587851
+    Data4: 1481124003
+  Banks:
+  - {fileID: -1084457952723205888}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 118097
 --- !u!114 &2424356459332000662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,10 +92,10 @@ MonoBehaviour:
   Path: Assets/sound/VR_rvolver_Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639065093137372965
+  lastModified: 639080681531395883
   FileSizes:
   - Name: Desktop
-    Value: 802
+    Value: 862
   Exists: 1
 --- !u!114 &3390862979002372150
 MonoBehaviour:

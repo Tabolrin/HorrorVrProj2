@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{b9420d0e-2ef2-4380-aa0a-2c740fa6a3ef}">
+		<property name="assetPath">
+			<value>sound_truak_takic.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>118.09755102040816</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2539fe93-9e72-440e-af0f-851b727780ba}</destination>
+		</relationship>
+	</object>
+</objects>

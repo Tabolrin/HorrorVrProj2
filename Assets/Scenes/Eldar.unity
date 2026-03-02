@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   data: {fileID: 0}
-  targetPosition: {x: 0, y: 0, z: 0}
+  targetPosition: {fileID: 0}
 --- !u!136 &91265005
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -396,48 +396,6 @@ MonoBehaviour:
   m_Script: {fileID: -2105364572, guid: 355474d781e5561489e3595e39866770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Tripolygon.UModelerX.Runtime.dll::Tripolygon.UModelerX.Runtime.UModelerXEditableMesh
-  isRiggingEnabled: 0
-  isPaintingEnabled: 0
-  currentEditor: 
-  materials:
-  - {fileID: 2100000, guid: ac9db7752f3682c4d8cdcca1fb220d08, type: 2}
-  materialsPath:
-  - Packages/com.tripolygon.umodeler-x/Editor/Resources/Materials/UModelerX_Gray_URP.mat
-  currentMaterialIndex: 0
-  renderableMesh:
-    name: UM_OperatedMesh_19b72097-84f1-4861-ad66-754e3f2085f9
-    skinnedMesh: 0
-    sharedMesh: {fileID: 2106533048}
-    buidVersion:
-      ModifierGUID: 
-      PosVersion: 0
-      ColorVersion: 0
-      UVVersion: 0
-      BoneWeightVersion: 0
-      IndexVersion: 0
-      OptimizedTopology: 0
-      TransformVersion: 0
-  sourceMesh: {fileID: 0}
-  sourceMeshRendererGUID: 19b72097-84f1-4861-ad66-754e3f2085f9
-  guid: 9f4d70ca-fdd0-4770-80f3-d3ee3ce979d3
-  localOptions:
-    RecalculateTangents: 0
-    SaveInSceneFolder: 0
-    ColliderMode: 0
-    AutoHotspotChannel: 0
-    angleError: 0
-    areaError: 0
-    hardAngle: 0
-    packMargin: 0
-  hotspotObject: {fileID: 0}
-  saveData: {fileID: 0}
-  IsSaveDataLoaded: 0
-  <IsDirtySaveData>k__BackingField: 0
-  texturePaintData:
-  - {fileID: 0}
-  modifierStack:
-    modifierList: []
-    currentIndex: -1
 --- !u!4 &236436775
 Transform:
   m_ObjectHideFlags: 0
@@ -946,7 +904,6 @@ MonoBehaviour:
   m_Script: {fileID: -521311792, guid: 355474d781e5561489e3595e39866770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Tripolygon.UModelerX.Runtime.dll::Tripolygon.UModelerX.Runtime.UModelerXCurveCache
-  items: []
 --- !u!4 &721579137
 Transform:
   m_ObjectHideFlags: 3
@@ -1440,7 +1397,6 @@ MonoBehaviour:
   m_Script: {fileID: -521311792, guid: 355474d781e5561489e3595e39866770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Tripolygon.UModelerX.Runtime.dll::Tripolygon.UModelerX.Runtime.UModelerXCurveCache
-  items: []
 --- !u!4 &972304271
 Transform:
   m_ObjectHideFlags: 3
@@ -1485,7 +1441,6 @@ MonoBehaviour:
   m_Script: {fileID: -521311792, guid: 355474d781e5561489e3595e39866770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Tripolygon.UModelerX.Runtime.dll::Tripolygon.UModelerX.Runtime.UModelerXCurveCache
-  items: []
 --- !u!4 &1036706691
 Transform:
   m_ObjectHideFlags: 3
@@ -3233,7 +3188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 535333117075886085, guid: 197f42725a944844c88142a3a20e0d10, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 78.6
+      value: 74.2
       objectReference: {fileID: 0}
     - target: {fileID: 535333117075886085, guid: 197f42725a944844c88142a3a20e0d10, type: 3}
       propertyPath: m_LocalRotation.w
