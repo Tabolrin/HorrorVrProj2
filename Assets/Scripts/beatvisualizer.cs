@@ -61,9 +61,9 @@ public class BeatVisualizer : MonoBehaviour
         }
 
         // Timeline bar: fills from 0 to 1 between beats
-        if (beatDetector && beatDetector.CurrentBPM > 0 && beatTimelineBar)
+        if (beatDetector && beatDetector.CurrentBpm > 0 && beatTimelineBar)
         {
-            float interval   = 60f / beatDetector.CurrentBPM;
+            float interval   = 60f / beatDetector.CurrentBpm;
             float timeSince  = Time.time - beatDetector.LastBeatTime;
             float normalized = Mathf.Clamp01(timeSince / interval);
             beatTimelineBar.fillAmount = normalized;
@@ -77,7 +77,7 @@ public class BeatVisualizer : MonoBehaviour
     {
         if (!shotMarker) return;
 
-        shotMarker.color = score.Rating switch
+        shotMarker.color = score.rating switch
         {
             BeatRating.Perfect => colorPerfect,
             BeatRating.Good    => colorGood,
@@ -85,10 +85,10 @@ public class BeatVisualizer : MonoBehaviour
         };
 
         // Position marker on the timeline bar
-        if (beatTimelineBar && beatDetector.CurrentBPM > 0)
+        if (beatTimelineBar && beatDetector.CurrentBpm > 0)
         {
-            float interval   = 60f / beatDetector.CurrentBPM;
-            float normalized = Mathf.Clamp01(score.TimeSinceBeat / interval);
+            float interval   = 60f / beatDetector.CurrentBpm;
+            float normalized = Mathf.Clamp01(score.timeSinceBeat / interval);
             RectTransform rt    = beatTimelineBar.GetComponent<RectTransform>();
             RectTransform mrkt  = shotMarker.GetComponent<RectTransform>();
             mrkt.anchoredPosition = new Vector2(rt.rect.width * normalized, 0f);
