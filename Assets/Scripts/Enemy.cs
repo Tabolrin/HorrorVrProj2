@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
 
     private Transform _player;
     private bool _arrived;
+    private bool _moving;
     private float _shootTimer;
     private float _health;
     private bool _isDead;
@@ -20,7 +21,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (_isDead) return;
+        if (_isDead || !_moving) return;
 
         if (!_arrived)
             MoveToTarget();
@@ -29,6 +30,12 @@ public class Enemy : MonoBehaviour
             FacePlayer();
             HandleShooting();
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("MoveStart"))
+            _moving = true;
     }
 
     private void MoveToTarget()
