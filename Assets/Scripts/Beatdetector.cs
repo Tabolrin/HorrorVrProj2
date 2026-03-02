@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 
+namespace FMOD
+{
+    public class DSP_FFT_WINDOW
+    {
+        public static int HANNING { get; set; }
+    }
+}
+
 /// <summary>
 /// Beat Detector using FMOD DSP spectrum analysis.
 /// Detects BPM and beat timing from any music played through FMOD.

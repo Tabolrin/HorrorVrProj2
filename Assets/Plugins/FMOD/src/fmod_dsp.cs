@@ -950,7 +950,8 @@ namespace FMOD
         SPECTRAL_CENTROID,
         IMMEDIATE_MODE,
         DOWNMIX,
-        CHANNEL
+        CHANNEL,
+        WINDOWTYPE
     }
 
 
