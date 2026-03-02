@@ -1,13 +1,19 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using FMOD;
 using FMOD.Studio;
 using FMODUnity;
+using UnityEngine.Serialization;
+using Debug = UnityEngine.Debug;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace FMOD
 {
-    public class DSP_FFT_WINDOW
+    public abstract class DspfftWindow
     {
-        public static int HANNING { get; set; }
+        public static int Hanning => 0;
     }
 }
 
@@ -46,28 +52,27 @@ public class BeatDetector : MonoBehaviour
     public float offBeatMultiplier     = 1.0f;
 
     // ── Events ──────────────────────────────────────────────────────────────
-    public System.Action OnBeatDetected;       // fired every beat
-    public System.Action<float> OnBPMUpdated;  // fired when BPM estimate changes
+    public Action OnBeatDetected;       // fired every beat
+    public Action<float> OnBpmUpdated;  // fired when BPM estimate changes
 
     // ── Public Read-Only State ───────────────────────────────────────────────
-    public float CurrentBPM        { get; private set; }
+    public float CurrentBpm        { get; private set; }
     public float LastBeatTime      { get; private set; }
     public float NextBeatPredicted { get; private set; }
     public bool  IsPlaying         { get; private set; }
 
     // ── Private ──────────────────────────────────────────────────────────────
     private EventInstance _musicInstance;
-    private FMOD.DSP      _fftDsp;
-    private FMOD.Channel  _channel;
-    private FMOD.ChannelGroup _masterGroup;
+    private DSP      _fftDsp;
+    private Channel  _channel;
+    private ChannelGroup _masterGroup;
 
-    private float[]           _spectrumData;
     private float[]           _spectrumHistory;
     private int               _historyIndex;
-    private const int         HISTORY_SIZE = 43; // ~1 second at 512/44100
+    private const int         HistorySize = 43; // ~1 second at 512/44100
 
     private readonly List<float> _beatTimestamps = new List<float>();
-    private const int            MAX_BEAT_HISTORY = 16;
+    private const int            MaxBeatHistory = 16;
 
     private float _lastBeatRealTime;
     private float _energyAverage;
@@ -77,8 +82,7 @@ public class BeatDetector : MonoBehaviour
 
     private void Awake()
     {
-        _spectrumData    = new float[spectrumSize];
-        _spectrumHistory = new float[HISTORY_SIZE];
+        _spectrumHistory = new float[HistorySize];
     }
 
     private void Start()
@@ -116,13 +120,13 @@ public class BeatDetector : MonoBehaviour
         _musicInstance.start();
 
         // Attach FFT DSP to the master channel group for spectrum reading
-        FMODUnity.RuntimeManager.CoreSystem.getMasterChannelGroup(out _masterGroup);
-        FMODUnity.RuntimeManager.CoreSystem.createDSPByType(FMOD.DSP_TYPE.FFT, out _fftDsp);
+        RuntimeManager.CoreSystem.getMasterChannelGroup(out _masterGroup);
+        RuntimeManager.CoreSystem.createDSPByType(DSP_TYPE.FFT, out _fftDsp);
 
-        _fftDsp.setParameterInt((int)FMOD.DSP_FFT.WINDOWSIZE, spectrumSize);
-        _fftDsp.setParameterInt((int)FMOD.DSP_FFT.WINDOWTYPE, (int)FMOD.DSP_FFT_WINDOW.HANNING);
+        _fftDsp.setParameterInt((int)DSP_FFT.WINDOWSIZE, spectrumSize);
+        _fftDsp.setParameterInt((int)DSP_FFT.WINDOWTYPE, DspfftWindow.Hanning);
 
-        _masterGroup.addDSP(FMOD.CHANNELCONTROL_DSP_INDEX.TAIL, _fftDsp);
+        _masterGroup.addDSP(CHANNELCONTROL_DSP_INDEX.TAIL, _fftDsp);
         _fftDsp.setActive(true);
 
         IsPlaying = true;
@@ -141,7 +145,7 @@ public class BeatDetector : MonoBehaviour
 
         if (_musicInstance.isValid())
         {
-            _musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            _musicInstance.stop(STOP_MODE.ALLOWFADEOUT);
             _musicInstance.release();
         }
     }
@@ -156,12 +160,11 @@ public class BeatDetector : MonoBehaviour
         if (!_fftDsp.hasHandle()) return;
 
         // Pull spectrum data from FFT DSP
-        System.IntPtr unmanagedData;
-        uint           length;
-        _fftDsp.getParameterData((int)FMOD.DSP_FFT.SPECTRUMDATA, out unmanagedData, out length);
+        IntPtr unmanagedData;
+        _fftDsp.getParameterData((int)DSP_FFT.SPECTRUMDATA, out unmanagedData, out _);
 
-        FMOD.DSP_PARAMETER_FFT fftData = (FMOD.DSP_PARAMETER_FFT)
-            System.Runtime.InteropServices.Marshal.PtrToStructure(unmanagedData, typeof(FMOD.DSP_PARAMETER_FFT));
+        DSP_PARAMETER_FFT fftData = (DSP_PARAMETER_FFT)
+            Marshal.PtrToStructure(unmanagedData, typeof(DSP_PARAMETER_FFT));
 
         if (fftData.numchannels == 0) return;
 
@@ -175,12 +178,12 @@ public class BeatDetector : MonoBehaviour
 
         // Rolling average
         _spectrumHistory[_historyIndex] = energy;
-        _historyIndex = (_historyIndex + 1) % HISTORY_SIZE;
+        _historyIndex = (_historyIndex + 1) % HistorySize;
 
         _energyAverage = 0f;
         foreach (float e in _spectrumHistory)
             _energyAverage += e;
-        _energyAverage /= HISTORY_SIZE;
+        _energyAverage /= HistorySize;
 
         // Beat condition: current energy significantly above recent average
         float threshold = _energyAverage * sensitivityThreshold;
@@ -199,16 +202,16 @@ public class BeatDetector : MonoBehaviour
         LastBeatTime = t;
 
         _beatTimestamps.Add(t);
-        if (_beatTimestamps.Count > MAX_BEAT_HISTORY)
+        if (_beatTimestamps.Count > MaxBeatHistory)
             _beatTimestamps.RemoveAt(0);
 
-        EstimateBPM();
+        EstimateBpm();
         OnBeatDetected?.Invoke();
 
-        Debug.Log($"[BeatDetector] Beat! BPM ≈ {CurrentBPM:F1}");
+        Debug.Log($"[BeatDetector] Beat! BPM ≈ {CurrentBpm:F1}");
     }
 
-    private void EstimateBPM()
+    private void EstimateBpm()
     {
         if (_beatTimestamps.Count < 4) return;
 
@@ -228,19 +231,19 @@ public class BeatDetector : MonoBehaviour
         if (count == 0) return;
 
         float avgInterval = totalInterval / count;
-        float newBPM      = 60f / avgInterval;
+        float newBpm      = 60f / avgInterval;
 
-        if (Mathf.Abs(newBPM - CurrentBPM) > 1f)
+        if (Mathf.Abs(newBpm - CurrentBpm) > 1f)
         {
-            CurrentBPM = newBPM;
-            OnBPMUpdated?.Invoke(CurrentBPM);
+            CurrentBpm = newBpm;
+            OnBpmUpdated?.Invoke(CurrentBpm);
         }
     }
 
     private void UpdatePredictedNextBeat()
     {
-        if (CurrentBPM <= 0) return;
-        float interval     = 60f / CurrentBPM;
+        if (CurrentBpm <= 0) return;
+        float interval     = 60f / CurrentBpm;
         NextBeatPredicted  = LastBeatTime + interval;
     }
 
@@ -284,11 +287,11 @@ public class BeatDetector : MonoBehaviour
 
         return new BeatScore
         {
-            Rating         = rating,
-            Multiplier     = multiplier,
-            DistanceToBeat = distToNearest,
-            TimeSinceBeat  = timeSinceBeat,
-            TimeToNextBeat = timeToNext
+            rating         = rating,
+            multiplier     = multiplier,
+            distanceToBeat = distToNearest,
+            timeSinceBeat  = timeSinceBeat,
+            timeToNextBeat = timeToNext
         };
     }
 
@@ -300,17 +303,17 @@ public class BeatDetector : MonoBehaviour
 
 public enum BeatRating { Perfect, Good, OffBeat }
 
-[System.Serializable]
+[Serializable]
 public struct BeatScore
 {
-    public BeatRating Rating;
-    public float      Multiplier;
-    public float      DistanceToBeat;
-    public float      TimeSinceBeat;
-    public float      TimeToNextBeat;
+    [FormerlySerializedAs("Rating")] public BeatRating rating;
+    [FormerlySerializedAs("Multiplier")] public float      multiplier;
+    [FormerlySerializedAs("DistanceToBeat")] public float      distanceToBeat;
+    [FormerlySerializedAs("TimeSinceBeat")] public float      timeSinceBeat;
+    [FormerlySerializedAs("TimeToNextBeat")] public float      timeToNextBeat;
 
     public override string ToString() =>
-        $"{Rating} ×{Multiplier:F1} | dist={DistanceToBeat*1000:F0}ms";
+        $"{rating} ×{multiplier:F1} | dist={distanceToBeat*1000:F0}ms";
 }
 
 #endregion

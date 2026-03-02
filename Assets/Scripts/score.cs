@@ -40,11 +40,11 @@ public class BeatScoreManager : MonoBehaviour
         BeatScore beat = beatDetector.EvaluateShot();
 
         int baseScore  = isKill ? baseScorePerKill : baseScorePerHit;
-        int finalScore = Mathf.RoundToInt(baseScore * beat.Multiplier * ComboMultiplier);
+        int finalScore = Mathf.RoundToInt(baseScore * beat.multiplier * ComboMultiplier);
 
         TotalScore += finalScore;
 
-        if (beat.Rating != BeatRating.OffBeat)
+        if (beat.rating != BeatRating.OffBeat)
             Combo++;
         else
             Combo = 0; // break combo on off-beat
@@ -73,7 +73,7 @@ public class BeatScoreManager : MonoBehaviour
 
         if (ratingText && beat.HasValue)
         {
-            ratingText.text = beat.Value.Rating switch
+            ratingText.text = beat.Value.rating switch
             {
                 BeatRating.Perfect => "PERFECT",
                 BeatRating.Good    => "GOOD",
