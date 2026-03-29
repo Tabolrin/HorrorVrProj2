@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -5713972432158303877}
   - component: {fileID: 6899761627106422005}
   m_Layer: 0
-  m_Name: shot_prefab
+  m_Name: EnemyShot_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 17a419bf40a4c7d41bbac7e05f621cc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

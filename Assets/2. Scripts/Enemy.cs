@@ -5,6 +5,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] private EnemyData data;
     [SerializeField] private Transform targetPosition;
 
+    [Header("Shooting")]
+    [Tooltip("Must match the EnemyProjectile pool ID in PoolConfigSO.")]
+    [SerializeField] private string _projectilePoolId = "EnemyProjectile";
+    [SerializeField] private Transform _shootPoint; // assign a child transform at gun/hand position
+
     // ── State ─────────────────────────────────────────────────────────────
     private Transform _player;
     private bool _arrived;
@@ -89,8 +94,18 @@ public class Enemy : MonoBehaviour
 
     private void Shoot()
     {
-        // TODO: fire a pooled projectile toward player
-        Debug.Log($"[Enemy] {name} shoots at player.");
+        if (_player == null) return;
+        if (ObjectPoolManager.Instance == null) return;
+
+        // Use shoot point if assigned, otherwise fire from self
+        Vector3 origin = _shootPoint != null ? _shootPoint.position : transform.position;
+        Vector3 dir    = (_player.position - origin).normalized;
+
+        var go = ObjectPoolManager.Instance.Spawn(_projectilePoolId, origin, Quaternion.LookRotation(dir));
+        if (go == null) return;
+
+        var projectile = go.GetComponent<EnemyProjectile>();
+        projectile?.Launch(dir, data.projectileDamage);
     }
 
     // ── Damage ────────────────────────────────────────────────────────────

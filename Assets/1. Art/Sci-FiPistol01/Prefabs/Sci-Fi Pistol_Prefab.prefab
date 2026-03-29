@@ -108,10 +108,13 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cec105908f7354c49a9c5e00934827ac, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3796988719130427477}
+      addedObject: {fileID: 3515361889388663880}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cec105908f7354c49a9c5e00934827ac, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3515361889388663880}
+      addedObject: {fileID: 4288419381764269533}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cec105908f7354c49a9c5e00934827ac, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3639298587925532379}
   m_SourcePrefab: {fileID: 100100000, guid: cec105908f7354c49a9c5e00934827ac, type: 3}
 --- !u!4 &1289957317196487066 stripped
 Transform:
@@ -123,23 +126,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cec105908f7354c49a9c5e00934827ac, type: 3}
   m_PrefabInstance: {fileID: 1615772078556118641}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3796988719130427477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922203563431936800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95612594c8f98db48ac9a484863bbfb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pistol
-  _gunProperties: {fileID: 11400000, guid: 43e7baf6cf769e947aa28c162b91f362, type: 2}
-  _firePoint: {fileID: 1139154410241842769}
-  _hand: 5
-  _magazineSize: 6
-  _laserShotPoolId: LaserShot
 --- !u!65 &3515361889388663880
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -161,3 +147,35 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.7338853, y: 14.380775, z: 22.217407}
   m_Center: {x: -0.048440695, y: -0.0135965645, z: -0.25284588}
+--- !u!114 &4288419381764269533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922203563431936800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95612594c8f98db48ac9a484863bbfb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pistol
+  _gunProperties: {fileID: 11400000, guid: 43e7baf6cf769e947aa28c162b91f362, type: 2}
+  _firePoint: {fileID: 1139154410241842769}
+  _hand: 5
+  _magazineSize: 6
+  _laserShotPoolId: LaserShot
+--- !u!114 &3639298587925532379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922203563431936800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8baf2dbc435c8d949b7f6d010eb65856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GunMeleeHit
+  _hand: 5
+  _minSwingSpeed: 1.5
+  _hitCooldownPerEnemy: 0.4

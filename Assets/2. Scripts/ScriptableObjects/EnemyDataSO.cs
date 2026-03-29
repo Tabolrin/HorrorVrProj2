@@ -1,4 +1,3 @@
-// EnemyData.cs
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Enemies/Enemy Data")]
@@ -14,4 +13,5 @@ public class EnemyData : ScriptableObject
 
     [Header("Combat")]
     public float shootInterval = 1.5f;
+    public float projectileDamage = 1f;
 }

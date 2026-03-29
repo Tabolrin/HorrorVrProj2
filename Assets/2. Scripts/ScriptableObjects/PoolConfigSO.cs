@@ -9,27 +9,27 @@ public class PoolConfigSO : ScriptableObject
     public class PoolEntry
     {
         [Tooltip("Unique key used by spawners to request this prefab.")]
-        public string id;
+        [SerializeField] public string id;
 
-        public GameObject prefab;
+        [SerializeField] public GameObject prefab;
 
         [Min(0)]
         [Tooltip("How many instances to create immediately at startup.")]
-        public int prewarmCount = 10;
+        [SerializeField] public int prewarmCount = 10;
 
         [Min(0)]
         [Tooltip("Hard limit: maximum number of instances of this id allowed in the scene at once (active + inactive).")]
-        public int maxInScene = 100;
+        [SerializeField] public int maxInScene = 100;
 
         [Min(0)]
         [Tooltip("Optional: maximum active at the same time. 0 = unlimited (up to maxInScene).")]
-        public int maxActive = 0;
+        [SerializeField] public int maxActive = 0;
     }
 
     [Header("Pools")]
-    public List<PoolEntry> entries = new();
+    [SerializeField] public List<PoolEntry> entries = new();
 
     [Header("Organization")]
     [Tooltip("If set, pooled objects will be parented under this Transform at runtime.")]
-    public Transform poolRoot;
+    [SerializeField] public Transform poolRoot;
 }
