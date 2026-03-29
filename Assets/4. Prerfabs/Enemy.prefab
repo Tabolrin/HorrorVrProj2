@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1511069431086254968}
   - component: {fileID: 1013015983592625629}
   - component: {fileID: 6518435480382039808}
+  - component: {fileID: 8851899899013636199}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -122,9 +123,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   data: {fileID: 11400000, guid: 929dd34c8304a9d4095d0504ebb2e893, type: 2}
-  targetPosition: {fileID: 7166654026417283445}
   _projectilePoolId: EnemyProjectile
   _shootPoint: {fileID: 6214772843990063153}
+  _animator: {fileID: 0}
+--- !u!135 &8851899899013636199
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823322813206304265}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 18
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5621363974173412485
 GameObject:
   m_ObjectHideFlags: 0

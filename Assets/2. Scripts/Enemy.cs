@@ -3,116 +3,122 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
-    [SerializeField] private Transform targetPosition;
 
     [Header("Shooting")]
     [Tooltip("Must match the EnemyProjectile pool ID in PoolConfigSO.")]
     [SerializeField] private string _projectilePoolId = "EnemyProjectile";
-    [SerializeField] private Transform _shootPoint; // assign a child transform at gun/hand position
+    [Tooltip("Empty child transform at the gun/hand muzzle position.")]
+    [SerializeField] private Transform _shootPoint;
+
+    [Header("Animator")]
+    [SerializeField] private Animator _animator;
+
+    // ── Animator parameter hashes ─────────────────────────────────────────
+    private static readonly int HashIsActive = Animator.StringToHash("IsActive");
+    private static readonly int HashShoot    = Animator.StringToHash("Shoot");
 
     // ── State ─────────────────────────────────────────────────────────────
     private Transform _player;
-    private bool _arrived;
-    private bool _moving;
-    private float _shootTimer;
-    private float _health;
+    private bool      _playerInRange;
+    private float     _shootTimer;
+    private float     _health;
 
     public bool IsDead { get; private set; }
 
     // ─────────────────────────────────────────────────────────────────────
     private void OnEnable()
     {
-        // Called both on first activation and when building resets
         ResetEnemy();
     }
 
     private void ResetEnemy()
     {
-        _player   = GameManager.Instance != null ? GameManager.Instance.Player : null;
-        _health   = data.maxHealth;
-        IsDead    = false;
-        _arrived  = false;
-        _moving   = false;
-        _shootTimer = 0f;
+        _player        = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        _health        = data.maxHealth;
+        IsDead         = false;
+        _playerInRange = false;
+        _shootTimer    = 0f;
+
+        _animator?.SetBool(HashIsActive, false);
     }
 
     private void Update()
     {
-        if (IsDead || !_moving) return;
+        if (IsDead || !_playerInRange) return;
 
-        if (!_arrived)
-            MoveToTarget();
-        else
-        {
-            FacePlayer();
-            HandleShooting();
-        }
+        FacePlayer();
+        HandleShooting();
     }
 
+    // ── Detection ─────────────────────────────────────────────────────────
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("MoveStart"))
-            _moving = true;
+        if (!other.CompareTag("Player")) return;
+        _playerInRange = true;
+        _animator?.SetBool(HashIsActive, true);
     }
 
-    // ── Movement ──────────────────────────────────────────────────────────
-    private void MoveToTarget()
+    private void OnTriggerExit(Collider other)
     {
-        Vector3 dir = targetPosition.position - transform.position;
-        dir.y = 0f;
-
-        if (dir.magnitude <= data.arrivedThreshold)
-        {
-            _arrived = true;
-            return;
-        }
-
-        transform.position += dir.normalized * data.moveSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.Slerp(transform.rotation,
-            Quaternion.LookRotation(dir.normalized), data.rotationSpeed * Time.deltaTime);
+        if (!other.CompareTag("Player")) return;
+        _playerInRange = false;
+        _animator?.SetBool(HashIsActive, false);
     }
 
+    // ── Facing ────────────────────────────────────────────────────────────
     private void FacePlayer()
     {
         if (_player == null) return;
-        Vector3 dir = (_player.position - transform.position).normalized;
+
+        Vector3 dir = _player.position - transform.position;
         dir.y = 0f;
-        transform.rotation = Quaternion.Slerp(transform.rotation,
-            Quaternion.LookRotation(dir), data.rotationSpeed * Time.deltaTime);
+        if (dir.sqrMagnitude < 0.001f) return;
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            Quaternion.LookRotation(dir.normalized),
+            data.rotationSpeed * Time.deltaTime);
     }
 
     // ── Shooting ──────────────────────────────────────────────────────────
     private void HandleShooting()
     {
         _shootTimer += Time.deltaTime;
-        if (_shootTimer >= data.shootInterval)
-        {
-            _shootTimer = 0f;
-            Shoot();
-        }
+        if (_shootTimer < data.shootInterval) return;
+
+        _shootTimer = 0f;
+        _animator?.SetTrigger(HashShoot);
+
+        // If using Animation Events: remove SpawnProjectile() call here
+        // and add an Animation Event on the Shoot clip instead.
+        // If NOT using Animation Events: leave this call here.
+        SpawnProjectile();
     }
 
-    private void Shoot()
+    /// <summary>
+    /// Safe to call from an Animation Event on the Shoot clip
+    /// at the exact frame the gun fires, for visual sync.
+    /// If called from both HandleShooting AND an Animation Event,
+    /// remove the call from HandleShooting.
+    /// </summary>
+    public void SpawnProjectile()
     {
-        if (_player == null) return;
-        if (ObjectPoolManager.Instance == null) return;
+        if (_player == null || ObjectPoolManager.Instance == null) return;
 
-        // Use shoot point if assigned, otherwise fire from self
         Vector3 origin = _shootPoint != null ? _shootPoint.position : transform.position;
         Vector3 dir    = (_player.position - origin).normalized;
 
-        var go = ObjectPoolManager.Instance.Spawn(_projectilePoolId, origin, Quaternion.LookRotation(dir));
+        var go = ObjectPoolManager.Instance.Spawn(
+            _projectilePoolId, origin, Quaternion.LookRotation(dir));
         if (go == null) return;
 
-        var projectile = go.GetComponent<EnemyProjectile>();
-        projectile?.Launch(dir, data.projectileDamage);
+        go.GetComponent<EnemyProjectile>()?.Launch(dir, data.projectileDamage);
     }
 
     // ── Damage ────────────────────────────────────────────────────────────
     public void TakeHit(float damage = 1f)
     {
         if (IsDead) return;
-
         _health = Mathf.Max(_health - damage, 0f);
         if (_health <= 0f) Die();
     }
@@ -120,18 +126,12 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         IsDead = true;
-        // Disable self — BuildingUnit will re-enable via ResetEnemy on pool return
         gameObject.SetActive(false);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        if (targetPosition == null) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(targetPosition.position, 0.3f);
-        Gizmos.DrawLine(transform.position, targetPosition.position);
-
         if (!Application.isPlaying || data == null) return;
         Gizmos.color = Color.Lerp(Color.red, Color.green, _health / data.maxHealth);
         Gizmos.DrawWireSphere(transform.position + Vector3.up * 2f, 0.3f);
