@@ -25,8 +25,7 @@ public class EnemyProjectile : MonoBehaviour
     {
         _spawnTime = Time.time;
     }
-
-    /// <summary>Called by Enemy.Shoot() to set travel direction and damage.</summary>
+    
     public void Launch(Vector3 direction, float damage)
     {
         _direction = direction.normalized;

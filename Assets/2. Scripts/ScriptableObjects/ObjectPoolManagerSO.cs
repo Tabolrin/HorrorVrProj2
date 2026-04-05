@@ -22,7 +22,7 @@ public class ObjectPoolManager : MonoBehaviour
         public int activeCount;
     }
 
-    // Helper component so instances know which pool they belong to (kept inside this file so we still have 3 scripts total).
+    // Helper component so instances know which pool they belong to 
     private class PooledInstance : MonoBehaviour
     {
         public string poolId;
@@ -109,7 +109,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         // Reuse inactive if possible
         while (pool.inactive.Count > 0 && go == null)
-            go = pool.inactive.Dequeue(); // could be destroyed externally
+            go = pool.inactive.Dequeue();
 
         // If none available, create if allowed
         if (go == null)
@@ -138,7 +138,7 @@ public class ObjectPoolManager : MonoBehaviour
         var tag = go.GetComponent<PooledInstance>();
         if (tag == null || string.IsNullOrWhiteSpace(tag.poolId))
         {
-            // Not a pooled object (or missing tag) — destroy to avoid leaking junk.
+            // Not a pooled object - destroy to avoid leaking junk.
             Destroy(go);
             return;
         }
@@ -153,8 +153,7 @@ public class ObjectPoolManager : MonoBehaviour
         pool.activeCount = Mathf.Max(0, pool.activeCount - 1);
 
         go.SetActive(false);
-
-        // Parent under root for cleanliness
+        
         go.transform.SetParent(_root, worldPositionStays: false);
 
         pool.inactive.Enqueue(go);

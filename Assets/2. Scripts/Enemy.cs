@@ -3,6 +3,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
+    [SerializeField] public Side side;
 
     [Header("Shooting")]
     [Tooltip("Must match the EnemyProjectile pool ID in PoolConfigSO.")]
@@ -88,19 +89,10 @@ public class Enemy : MonoBehaviour
 
         _shootTimer = 0f;
         _animator?.SetTrigger(HashShoot);
-
-        // If using Animation Events: remove SpawnProjectile() call here
-        // and add an Animation Event on the Shoot clip instead.
-        // If NOT using Animation Events: leave this call here.
-        SpawnProjectile();
+        
+        //SpawnProjectile();
     }
-
-    /// <summary>
-    /// Safe to call from an Animation Event on the Shoot clip
-    /// at the exact frame the gun fires, for visual sync.
-    /// If called from both HandleShooting AND an Animation Event,
-    /// remove the call from HandleShooting.
-    /// </summary>
+    
     public void SpawnProjectile()
     {
         if (_player == null || ObjectPoolManager.Instance == null) return;

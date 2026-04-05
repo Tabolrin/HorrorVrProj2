@@ -1,31 +1,32 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Attach to each building prefab root.
-/// Holds refs to all Enemy children and re-enables them when the building
-/// is returned to the pool and re-spawned.
-/// </summary>
+public enum Side { Left, Middle, Right }
+
 public class BuildingUnit : MonoBehaviour
 {
-    // Populated automatically in Awake so the prefab needs no manual wiring.
-    private Enemy[] _enemies;
-
-    private void Awake()
+    [Serializable]
+    public class EnemyEntry
     {
-        _enemies = GetComponentsInChildren<Enemy>(includeInactive: true);
-    }
+        [Tooltip("Unique key used by spawners to request this prefab.")]
+        [SerializeField] public Side side;
 
-    /// <summary>
-    /// Called by BuildingSpawner after pulling from pool, before activation.
-    /// Re-enables all enemies so they're alive for the next run.
-    /// </summary>
+        [SerializeField] public Enemy Object;
+    }
+    
+    [Header("Pools")] 
+    [SerializeField] private List<EnemyEntry> Enemies = new();
+    
+    [SerializeField] public Side SpawnSide;
+    
+    
     public void ResetBuilding()
     {
-        foreach (var e in _enemies)
+        foreach (var e in Enemies)
         {
-            if (e == null) continue;
-            e.gameObject.SetActive(true);
-            // Enemy.OnEnable handles the full stat reset
+            if (e == null || (e.side == SpawnSide && e.side != Side.Middle)) continue;
+            e.Object.gameObject.SetActive(true);
         }
     }
 }

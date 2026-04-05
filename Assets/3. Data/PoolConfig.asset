@@ -19,47 +19,52 @@ MonoBehaviour:
     maxInScene: 20
     maxActive: 15
   - id: BuildingA
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 9ed5c328cef8bd649b241ef9629da3b0, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingB
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 328b17a521863314cb48ea0e69533f86, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingC
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 19879e5e5640b8f40b7e462ddf769565, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingD
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 1233860d1aa1f234697805cb8faa827a, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingE
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 967a2f8b12166c94c88cc7ca0c3af00a, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingF
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 6d2d992ac3d5d5e4ebc99b9df9f8a916, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingG
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: e9b81e6d81f68024a92295b38e67bb5a, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingH
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 1fd129e0c9dcc9b4f886335705019341, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
   - id: BuildingI
-    prefab: {fileID: 0}
+    prefab: {fileID: 8340001605819805830, guid: 080b0e4416f59964a8d00c1e86d8086b, type: 3}
+    prewarmCount: 7
+    maxInScene: 10
+    maxActive: 5
+  - id: BuildingJ
+    prefab: {fileID: 8340001605819805830, guid: a3e498db3740b514583157a42452c186, type: 3}
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5

@@ -1,11 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Place TWO of these in the scene (left lane, right lane).
-/// Wire both to a single BuildingSpawnCoordinator which calls SpawnNext().
-/// Each spawner manages its own active building list and pool return.
-/// </summary>
 public class BuildingSpawner : MonoBehaviour
 {
     [Header("Pool IDs (must match PoolConfigSO entries)")]
@@ -18,6 +13,8 @@ public class BuildingSpawner : MonoBehaviour
     [Header("Return Trigger")]
     [Tooltip("When a building's Z passes this transform's Z it is returned to pool.")]
     [SerializeField] private Transform _returnThreshold;
+    
+    [SerializeField] private Side SpawnSide;
 
     // ── Runtime ───────────────────────────────────────────────────────────
     private struct ActiveBuilding
@@ -62,9 +59,22 @@ public class BuildingSpawner : MonoBehaviour
         if (go == null) return;
 
         var unit = go.GetComponent<BuildingUnit>();
-        unit?.ResetBuilding();
+        
+        if (unit)
+        {
+            unit.ResetBuilding();
+            unit.SpawnSide = SpawnSide;
+            if (unit.SpawnSide == Side.Left) unit.gameObject.SetActive(true);
+        }
 
         _active.Add(new ActiveBuilding { go = go, unit = unit });
+        
+        switch(SpawnSide)
+        {
+            case Side.Left: go.transform.rotation = Quaternion.Euler(0f, 180f, 0f); break;
+            case Side.Right: go.transform.rotation = Quaternion.Euler(0f, 0f, 0f); break;
+            default: break;
+        }
     }
 
     private void OnDisable()
