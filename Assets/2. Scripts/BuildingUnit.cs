@@ -18,8 +18,9 @@ public class BuildingUnit : MonoBehaviour
     [Header("Pools")] 
     [SerializeField] private List<EnemyEntry> Enemies = new();
     
+    [Header("Settings")] 
     [SerializeField] public Side SpawnSide;
-    
+    [SerializeField] public bool ShouldRotateAtSpawn;
     
     public void ResetBuilding()
     {

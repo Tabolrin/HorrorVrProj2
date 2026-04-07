@@ -45,10 +45,8 @@ public class BuildingSpawner : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// Called by BuildingSpawnCoordinator. Picks a random pool ID and spawns.
-    /// </summary>
+    
+    // Picks a random pool ID and spawns.
     public void SpawnNext()
     {
         if (_poolIds == null || _poolIds.Length == 0) return;
@@ -71,9 +69,17 @@ public class BuildingSpawner : MonoBehaviour
         
         switch(SpawnSide)
         {
-            case Side.Left: go.transform.rotation = Quaternion.Euler(0f, 180f, 0f); break;
-            case Side.Right: go.transform.rotation = Quaternion.Euler(0f, 0f, 0f); break;
-            default: break;
+            case Side.Left: 
+                if(unit.ShouldRotateAtSpawn)
+                    go.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                break;
+            
+            case Side.Right: 
+                go.transform.rotation = Quaternion.Euler(0f, 0f, 0f); 
+                break;
+           
+            default: 
+                break;
         }
     }
 
