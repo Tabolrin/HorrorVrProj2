@@ -35,8 +35,7 @@ public class BuildingUnit : MonoBehaviour
         foreach (var e in Enemies)
         {
             if (e == null) continue;
-            // Skip enemies assigned to the opposite lane
-            if (e.side != SpawnSide && e.side != Side.Middle) continue;
+            if (e == null || (e.side != SpawnSide && e.side != Side.Middle)) continue;
             e.Object.gameObject.SetActive(true);
         }
     }

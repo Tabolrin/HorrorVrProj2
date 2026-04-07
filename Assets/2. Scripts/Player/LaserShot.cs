@@ -30,6 +30,8 @@ public class LaserShot : MonoBehaviour
     {
         _spawnTime    = Time.time;
         _prevPosition = transform.position;
+        if (_enemyLayer.value == 0)
+            Debug.LogWarning("[LaserShot] Enemy layer mask not set - shots will not register hits.");
     }
 
     private void Update()

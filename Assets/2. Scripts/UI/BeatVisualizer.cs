@@ -24,6 +24,15 @@ public class BeatVisualizer : MonoBehaviour
     private float _pulseTimer;
     private const float PulseDuration = 0.12f;
 
+    private RectTransform _barRect;
+    private RectTransform _markerRect;
+
+    private void Awake()
+    {
+        if (beatTimelineBar) _barRect    = beatTimelineBar.GetComponent<RectTransform>();
+        if (shotMarker)      _markerRect = shotMarker.GetComponent<RectTransform>();
+    }
+
     private void OnEnable()
     {
         if (beatDetector) beatDetector.OnBeatDetected += HandleBeat;
@@ -89,13 +98,11 @@ public class BeatVisualizer : MonoBehaviour
             _                  => colorOffBeat
         };
 
-        if (beatTimelineBar && beatDetector.CurrentBpm > 0)
+        if (beatTimelineBar && beatDetector.CurrentBpm > 0 && _barRect != null && _markerRect != null)
         {
             float interval   = 60f / beatDetector.CurrentBpm;
             float normalized = Mathf.Clamp01(score.timeSinceBeat / interval);
-            RectTransform barRect    = beatTimelineBar.GetComponent<RectTransform>();
-            RectTransform markerRect = shotMarker.GetComponent<RectTransform>();
-            markerRect.anchoredPosition = new Vector2(barRect.rect.width * normalized, 0f);
+            _markerRect.anchoredPosition = new Vector2(_barRect.rect.width * normalized, 0f);
         }
     }
 }

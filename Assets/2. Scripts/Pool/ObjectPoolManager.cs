@@ -14,6 +14,8 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private bool buildOnAwake = true;
 
     private readonly Dictionary<string, PoolRuntime> _pools = new();
+    // Cache PooledInstance components by instance ID to avoid GetComponent on every return
+    private readonly Dictionary<int, PooledInstance> _instanceCache = new();
     private Transform _root;
 
     private class PoolRuntime
@@ -128,10 +130,17 @@ public class ObjectPoolManager : MonoBehaviour
     {
         if (go == null) return;
 
-        var tag = go.GetComponent<PooledInstance>();
-        if (tag == null || string.IsNullOrWhiteSpace(tag.poolId)) { Destroy(go); return; }
+        if (!_instanceCache.TryGetValue(go.GetInstanceID(), out var tag))
+        {
+            Destroy(go);
+            return;
+        }
 
-        if (!_pools.TryGetValue(tag.poolId, out var pool)) { Destroy(go); return; }
+        if (string.IsNullOrWhiteSpace(tag.poolId) || !_pools.TryGetValue(tag.poolId, out var pool))
+        {
+            Destroy(go);
+            return;
+        }
 
         pool.activeCount = Mathf.Max(0, pool.activeCount - 1);
         go.SetActive(false);
@@ -148,6 +157,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         var tag  = go.GetComponent<PooledInstance>() ?? go.AddComponent<PooledInstance>();
         tag.poolId = id;
+        _instanceCache[go.GetInstanceID()] = tag;
 
         pool.totalCreated++;
         go.SetActive(false);

@@ -44,6 +44,7 @@ public class Pistol : MonoBehaviour
     {
         if (_isReloading) return;
         if (_gunProperties == null) return;
+        if (_gunProperties._fireRate <= 0) return;
         if (Time.time - _lastFireTime < 1f / _gunProperties._fireRate) return;
 
         if (_currentAmmo <= 0)

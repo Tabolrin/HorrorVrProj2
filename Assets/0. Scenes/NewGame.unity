@@ -1676,7 +1676,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e5398c6acf15fb43a952f18ae05bc91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  RayInteractor: {fileID: 1175499102}
   <Player>k__BackingField: {fileID: 1615936888}
 --- !u!4 &673555990
 Transform:
@@ -3743,6 +3742,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Gun
       objectReference: {fileID: 0}
+    - target: {fileID: 4288419381764269533, guid: da29dbb386adcc34380418d7045753df, type: 3}
+      propertyPath: _laserShotPoolId
+      value: PlayerProjectile
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4244,6 +4247,7 @@ GameObject:
   - component: {fileID: 1615936891}
   - component: {fileID: 1615936890}
   - component: {fileID: 1615936892}
+  - component: {fileID: 1615936893}
   m_Layer: 6
   m_Name: XR Origin Player
   m_TagString: Player
@@ -4314,12 +4318,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
   _stats: {fileID: 11400000, guid: e85471e0233596a4ab4452bb9d9f4cc5, type: 2}
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
   OnHealthChanged:
     m_PersistentCalls:
       m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1615936893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615936887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd849458c1b2774c8bbfd60cd557453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeadDrivenMovement
+  _head: {fileID: 178121855}
+  _movementScale: 1
+  _maxDriftX: 1.5
+  _maxDriftZ: 0.8
 --- !u!1 &1723425024
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,6 +35,7 @@ public class EnemyProjectile : MonoBehaviour
 
     private void Update()
     {
+        if (_direction == Vector3.zero) return;
         transform.position += _direction * (_speed * Time.deltaTime);
         if (Time.time - _spawnTime >= _maxLifetime)
             ReturnToPool();

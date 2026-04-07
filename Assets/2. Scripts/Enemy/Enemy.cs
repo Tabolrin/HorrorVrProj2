@@ -84,8 +84,7 @@ public class Enemy : MonoBehaviour
         if (_shootTimer < data.shootInterval) return;
         _shootTimer = 0f;
         _animator?.SetTrigger(HashShoot);
-        // If using Animation Events: remove SpawnProjectile() here
-        // and add an Animation Event on the Shoot clip instead for visual sync.
+        // Remove this call and use an Animation Event on the Shoot clip instead for visual sync
         SpawnProjectile();
     }
 

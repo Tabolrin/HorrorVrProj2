@@ -20,6 +20,8 @@ public class GunMeleeHit : MonoBehaviour
 
     private Vector3 _prevPosition;
     private float   _currentSpeed;
+    private float   _pruneTimer;
+    private const float PruneInterval = 5f;
 
     // Keyed by enemy instance ID to avoid stale references after pool resets
     private readonly System.Collections.Generic.Dictionary<int, float> _cooldowns = new();
@@ -30,6 +32,16 @@ public class GunMeleeHit : MonoBehaviour
     {
         _currentSpeed = (transform.position - _prevPosition).magnitude / Time.deltaTime;
         _prevPosition = transform.position;
+
+        // Periodically remove expired cooldown entries to prevent unbounded growth
+        _pruneTimer += Time.deltaTime;
+        if (_pruneTimer >= PruneInterval)
+        {
+            _pruneTimer = 0f;
+            var keys = new System.Collections.Generic.List<int>(_cooldowns.Keys);
+            foreach (int k in keys)
+                if (_cooldowns[k] < Time.time) _cooldowns.Remove(k);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
