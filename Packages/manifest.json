@@ -2,7 +2,7 @@
   "dependencies": {
     "com.meta.xr.sdk.all": "85.0.0",
     "com.unity.ai.navigation": "2.0.12",
-    "com.unity.burst": "1.8.28",
+    "com.unity.burst": "1.8.29",
     "com.unity.cinemachine": "3.1.5",
     "com.unity.collab-proxy": "2.11.2",
     "com.unity.collections": "2.6.5",
