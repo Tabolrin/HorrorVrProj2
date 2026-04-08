@@ -342,6 +342,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
+      propertyPath: ShouldRotateAtSpawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       propertyPath: Enemies.Array.data[0].side
       value: 1
       objectReference: {fileID: 0}

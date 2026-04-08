@@ -295,6 +295,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building Variant J
       objectReference: {fileID: 0}
+    - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
+      propertyPath: ShouldRotateAtSpawn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9084716104767091941, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

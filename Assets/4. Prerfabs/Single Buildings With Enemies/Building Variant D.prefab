@@ -168,6 +168,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 947479721923698666}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
+      propertyPath: Enemies.Array.data[3].Object
+      value: 
+      objectReference: {fileID: 4016746996272587802}
+    - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       propertyPath: Enemies.Array.data[4].Object
       value: 
       objectReference: {fileID: 2705632696037502959}
@@ -222,13 +226,13 @@ PrefabInstance:
       addedObject: {fileID: 3161770733605263756}
     - targetCorrespondingSourceObject: {fileID: 9084716104767091941, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9031397793753031825}
-    - targetCorrespondingSourceObject: {fileID: 9084716104767091941, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4488958139248146658}
     - targetCorrespondingSourceObject: {fileID: 9084716104767091941, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5174000060629868385}
+    - targetCorrespondingSourceObject: {fileID: 9084716104767091941, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9031397793753031825}
     - targetCorrespondingSourceObject: {fileID: 9084716104767091941, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8027654206723452772}
@@ -515,6 +519,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7889eb5a6a17adc4f86d22acf8d1c838, type: 3}
+--- !u!114 &4016746996272587802 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6518435480382039808, guid: 7889eb5a6a17adc4f86d22acf8d1c838, type: 3}
+  m_PrefabInstance: {fileID: 7910705322695099162}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 661601e0517db3e4082e4cd5ef3eddd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
 --- !u!4 &9031397793753031825 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1197254798662821771, guid: 7889eb5a6a17adc4f86d22acf8d1c838, type: 3}
