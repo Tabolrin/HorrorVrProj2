@@ -879,9 +879,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSpawner
   _poolIds:
-  - 
+  - BuildingA
+  - BuildingB
+  - BuildingC
+  - BuildingD
+  - BuildingE
+  - BuildingF
+  - BuildingG
+  - BuildingH
+  - BuildingI
+  - BuildingJ
   _moveSpeed: 5
-  _returnThreshold: {fileID: 0}
+  _returnThreshold: {fileID: 924514821}
   SpawnSide: 0
 --- !u!4 &383197271
 Transform:
@@ -2258,9 +2267,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d2d45e9d82352f4e80f1f0515cbcb7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSpawner
-  _poolIds: []
+  _poolIds:
+  - BuildingA
+  - BuildingB
+  - BuildingC
+  - BuildingD
+  - BuildingE
+  - BuildingF
+  - BuildingG
+  - BuildingH
+  - BuildingI
+  - BuildingJ
   _moveSpeed: 5
-  _returnThreshold: {fileID: 0}
+  _returnThreshold: {fileID: 924514821}
   SpawnSide: 0
 --- !u!4 &841402058
 Transform:
@@ -2272,6 +2291,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 25, y: 0, z: 150}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1566558880}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &924514820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 924514821}
+  m_Layer: 0
+  m_Name: ReturnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &924514821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924514820}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -11.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4119,6 +4169,7 @@ Transform:
   - {fileID: 383197271}
   - {fileID: 841402058}
   - {fileID: 146831027}
+  - {fileID: 924514821}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1615936887
