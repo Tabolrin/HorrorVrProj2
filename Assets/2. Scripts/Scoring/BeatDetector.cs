@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using FMOD;
 using FMOD.Studio;
@@ -21,7 +20,10 @@ public class BeatDetector : MonoBehaviour
     public string musicEventPath = "event:/Music/Level1";
 
     [Header("Beat Detection Tuning")]
-    [Range(0f, 1f)]
+    // FIX: Range was [0,1] but default value was 1.3 (out of range).
+    // Unity would silently clamp it to 1.0 in the inspector, making detection
+    // far too sensitive. Corrected range to [1, 3].
+    [Range(1f, 3f)]
     [Tooltip("Energy threshold multiplier. Higher = less sensitive to beats.")]
     public float sensitivityThreshold = 1.3f;
 
@@ -41,6 +43,16 @@ public class BeatDetector : MonoBehaviour
     public float perfectBeatMultiplier = 2.0f;
     public float goodBeatMultiplier    = 1.5f;
     public float offBeatMultiplier     = 1.0f;
+
+    // FIX: Analyze every N frames instead of every frame.
+    // Marshal.PtrToStructure on DSP_PARAMETER_FFT allocates a managed object
+    // (jagged float[][] array) every call. On Android/Oculus this causes
+    // severe per-frame GC pressure that leads to crashes.
+    // At 72fps, every-3-frames = ~24 analysis ticks/sec, well above what's needed.
+    [Header("Performance")]
+    [Tooltip("Run spectrum analysis every N frames. 1 = every frame (not recommended on Oculus). 3 is a safe default.")]
+    [Range(1, 10)]
+    public int analyzeEveryNFrames = 3;
 
     public Action OnBeatDetected;
     public Action<float> OnBpmUpdated;
@@ -65,18 +77,33 @@ public class BeatDetector : MonoBehaviour
     private int   _beatCount;
     private const int MaxBeatHistory = 16;
 
-    private float _energyRunningTotal; // maintained incrementally to avoid per-frame loop
+    private float _energyRunningTotal;
     private float _lastBeatRealTime;
+    private int   _frameCounter;
 
     #region Unity Lifecycle
 
     private void Awake() => _spectrumHistory = new float[HistorySize];
-    private void Start()  => PlayMusic();
+
+    // FIX: Start() no longer calls PlayMusic().
+    // GameStateManager.StartGame() is the single entry point for starting music.
+    // Having both Start() and GameStateManager call PlayMusic() created two
+    // FMOD event instances and two FFT DSPs on the master channel group.
+    private void Start() { }
 
     private void Update()
     {
         if (!IsPlaying) return;
-        AnalyzeSpectrum();
+
+        // FIX: Frame-skip spectrum analysis to reduce per-frame GC allocations
+        // from Marshal.PtrToStructure (DSP_PARAMETER_FFT contains float[][]).
+        _frameCounter++;
+        if (_frameCounter >= analyzeEveryNFrames)
+        {
+            _frameCounter = 0;
+            AnalyzeSpectrum();
+        }
+
         UpdatePredictedNextBeat();
     }
 
@@ -88,6 +115,12 @@ public class BeatDetector : MonoBehaviour
 
     public void PlayMusic()
     {
+        if (IsPlaying)
+        {
+            Debug.LogWarning("[BeatDetector] PlayMusic called but already playing. Ignoring.");
+            return;
+        }
+
         if (string.IsNullOrEmpty(musicEventPath))
         {
             Debug.LogError("[BeatDetector] musicEventPath is empty.");
@@ -133,12 +166,18 @@ public class BeatDetector : MonoBehaviour
     {
         if (!_fftDsp.hasHandle()) return;
 
-        // Read raw spectrum data from unmanaged FMOD memory via pointer
+        // Read raw spectrum data from unmanaged FMOD memory via pointer.
+        // NOTE: This still uses Marshal.PtrToStructure which allocates a managed
+        // DSP_PARAMETER_FFT (with float[][] spectrum) each call. The frame-skip
+        // above reduces frequency, but if crashes persist the deeper fix is to
+        // read individual bin values via getParameterFloat instead.
         _fftDsp.getParameterData((int)DSP_FFT.SPECTRUMDATA, out IntPtr unmanagedData, out _);
+        if (unmanagedData == IntPtr.Zero) return;
+
         DSP_PARAMETER_FFT fftData = (DSP_PARAMETER_FFT)
             Marshal.PtrToStructure(unmanagedData, typeof(DSP_PARAMETER_FFT));
 
-        if (fftData.numchannels == 0) return;
+        if (fftData.numchannels == 0 || fftData.spectrum == null || fftData.spectrum.Length == 0) return;
 
         // Sum sub-bass and bass bins (indices 0-15 ~ 0-1300 Hz at 44100Hz/512 window)
         float energy = 0f;
@@ -147,15 +186,15 @@ public class BeatDetector : MonoBehaviour
             energy += fftData.spectrum[0][i];
         energy /= bassEnd;
 
-        // Maintain rolling average incrementally - subtract old value, add new
+        // Maintain rolling average incrementally
         _energyRunningTotal -= _spectrumHistory[_historyIndex];
         _spectrumHistory[_historyIndex] = energy;
         _energyRunningTotal += energy;
         _historyIndex = (_historyIndex + 1) % HistorySize;
-        float _energyAverage = _energyRunningTotal / HistorySize;
+        float energyAverage = _energyRunningTotal / HistorySize;
 
         float now = Time.realtimeSinceStartup;
-        if (energy > _energyAverage * sensitivityThreshold &&
+        if (energy > energyAverage * sensitivityThreshold &&
             now - _lastBeatRealTime > minTimeBetweenBeats)
         {
             _lastBeatRealTime = now;
@@ -185,7 +224,6 @@ public class BeatDetector : MonoBehaviour
         float total = 0f;
         int   count = 0;
 
-        // Iterate through filled slots in circular buffer order
         for (int i = 1; i < _beatCount; i++)
         {
             int curr = (_beatWriteIndex - i + MaxBeatHistory)     % MaxBeatHistory;
@@ -265,11 +303,11 @@ public enum BeatRating { Perfect, Good, OffBeat }
 [Serializable]
 public struct BeatScore
 {
-    [FormerlySerializedAs("Rating")]        public BeatRating rating;
-    [FormerlySerializedAs("Multiplier")]    public float      multiplier;
-    [FormerlySerializedAs("DistanceToBeat")] public float     distanceToBeat;
-    [FormerlySerializedAs("TimeSinceBeat")] public float      timeSinceBeat;
-    [FormerlySerializedAs("TimeToNextBeat")] public float     timeToNextBeat;
+    [FormerlySerializedAs("Rating")]         public BeatRating rating;
+    [FormerlySerializedAs("Multiplier")]     public float      multiplier;
+    [FormerlySerializedAs("DistanceToBeat")] public float      distanceToBeat;
+    [FormerlySerializedAs("TimeSinceBeat")]  public float      timeSinceBeat;
+    [FormerlySerializedAs("TimeToNextBeat")] public float      timeToNextBeat;
 
     public override string ToString() =>
         $"{rating} x{multiplier:F1} | dist={distanceToBeat * 1000:F0}ms";

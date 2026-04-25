@@ -44,8 +44,10 @@ public class Pistol : MonoBehaviour
     {
         if (_isReloading) return;
         if (_gunProperties == null) return;
-        if (_gunProperties._fireRate <= 0) return;
-        if (Time.time - _lastFireTime < 1f / _gunProperties._fireRate) return;
+        // FIX: Updated field references from _fireRate to FireRate to match
+        // the renamed public fields in GunProperties.
+        if (_gunProperties.FireRate <= 0) return;
+        if (Time.time - _lastFireTime < 1f / _gunProperties.FireRate) return;
 
         if (_currentAmmo <= 0)
         {

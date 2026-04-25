@@ -4,7 +4,7 @@ using UnityEngine;
 /// Stationary enemy placed on building prefabs.
 /// Idles until the player enters the detection trigger,
 /// then faces the player and shoots at set intervals.
-/// Resets via OnEnable when its building is recycled by the pool.
+/// Resets via BuildingUnit.ResetBuilding() when its building is recycled by the pool.
 /// </summary>
 public class Enemy : MonoBehaviour
 {
@@ -31,22 +31,49 @@ public class Enemy : MonoBehaviour
 
     public bool IsDead { get; private set; }
 
-    // Called on first activation and on every pool reset via BuildingUnit
-    private void OnEnable() => ResetEnemy();
-
-    private void ResetEnemy()
+    // FIX: OnEnable no longer calls ResetEnemy directly.
+    // ResetEnemy is called by BuildingUnit.ResetBuilding() BEFORE SetActive(true),
+    // so _player is already assigned when OnEnable fires. This prevents
+    // the throw during pool pre-warming when GameManager may not exist yet.
+    private void OnEnable()
     {
-        _player        = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        // Re-acquire player reference in case GameManager wasn't ready at pre-warm time
+        if (_player == null && GameManager.Instance != null)
+            _player = GameManager.Instance.Player;
+    }
+
+    /// <summary>
+    /// Resets all enemy state. Called by BuildingUnit.ResetBuilding() before SetActive(true).
+    /// Returns false if GameManager is not ready yet (safe - enemy stays inert).
+    /// </summary>
+    public bool ResetEnemy()
+    {
+        _player = GameManager.Instance != null ? GameManager.Instance.Player : null;
+        if (_player == null)
+        {
+            Debug.LogWarning("[Enemy] GameManager not ready during ResetEnemy - enemy will be inert.");
+            return false;
+        }
+
         _health        = data.maxHealth;
         IsDead         = false;
         _playerInRange = false;
         _shootTimer    = 0f;
         _animator?.SetBool(HashIsActive, false);
+        return true;
     }
 
     private void Update()
     {
         if (IsDead || !_playerInRange) return;
+
+        // Safety: if _player was null at reset time, try to acquire it now
+        if (_player == null)
+        {
+            if (GameManager.Instance != null) _player = GameManager.Instance.Player;
+            if (_player == null) return;
+        }
+
         FacePlayer();
         HandleShooting();
     }

@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7843122744993043561
 Transform:
   m_ObjectHideFlags: 0
@@ -576,7 +576,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       propertyPath: Enemies.Array.size
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       propertyPath: Enemies.Array.data[0].side
@@ -627,13 +627,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8218867946076490562}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
-      propertyPath: Enemies.Array.data[7].Object
+      propertyPath: Enemies.Array.data[6].Object
       value: 
       objectReference: {fileID: 6555475552974664903}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
-      propertyPath: Enemies.Array.data[8].Object
+      propertyPath: Enemies.Array.data[7].Object
       value: 
       objectReference: {fileID: 4643952554455496602}
+    - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
+      propertyPath: Enemies.Array.data[8].Object
+      value: 
+      objectReference: {fileID: 5374001756219390520}
     - target: {fileID: 7668282108190511511, guid: db4fa7f1072f9b141bc1d9ff650612b1, type: 3}
       propertyPath: Enemies.Array.data[9].Object
       value: 

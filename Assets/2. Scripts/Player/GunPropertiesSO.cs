@@ -7,8 +7,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GunProperties", menuName = "Scriptable Objects/GunProperties")]
 public class GunProperties : ScriptableObject
 {
-    public float     _range;
-    public int       _maxAmmo;
-    public LayerMask enemyLayer;
-    public float     _fireRate;
+    // FIX: Public serialized fields renamed to PascalCase to match Unity SO conventions
+    // and the rest of the codebase. Underscore prefix is reserved for private fields.
+    // If Pistol.cs references these by old names (_range, _maxAmmo, _fireRate),
+    // update those references accordingly.
+    public float     Range;
+    public int       MaxAmmo;
+    public LayerMask EnemyLayer;
+    public float     FireRate;
 }
