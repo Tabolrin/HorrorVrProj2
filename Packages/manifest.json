@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.meta.xr.sdk.all": "85.0.0",
+    "com.meta.xr.sdk.all": "201.0.0",
     "com.unity.ai.navigation": "2.0.12",
     "com.unity.burst": "1.8.29",
     "com.unity.cinemachine": "3.1.5",

@@ -6,8 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/0. Scenes/Game.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/0. Scenes/MainMenu.unity
+    guid: d6c332544ca75a44b8e223fd89053d36
+  - enabled: 1
+    path: Assets/0. Scenes/LevelSelect.unity
+    guid: b9a0ea08763cda846875c79d2caae014
+  - enabled: 1
+    path: Assets/0. Scenes/Level_1.unity
+    guid: 4b37836b41289d94fa3df1731a7cdc09
+  - enabled: 1
+    path: Assets/0. Scenes/WinLose.unity
+    guid: 6baca2c87a372714c8fc05f4a5e2f363
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4cb4f4a391cc6a6478bf0f3315b12c0b, type: 2}

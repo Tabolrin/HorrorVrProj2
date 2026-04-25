@@ -257,17 +257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &181860435 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7103690630191266771, guid: abca73f847611e64a92df154357eaa1b, type: 3}
-  m_PrefabInstance: {fileID: 4502476383624051385}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3d68f706deb984b86d3a2e6df9ced3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ResultsUI
 --- !u!1 &383197269
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,8 +503,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
   _beatDetector: {fileID: 673555996}
   _coordinator: {fileID: 146831028}
-  _resultsUI: {fileID: 181860435}
-  _postSongDelay: 3
+  _playerManager: {fileID: 4502476383624051386}
+  _postRunDelay: 3
 --- !u!114 &673555996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,6 +1108,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1177413452435092597, guid: abca73f847611e64a92df154357eaa1b, type: 3}
+      propertyPath: _toggleUIAction
+      value: 
+      objectReference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     - target: {fileID: 3133651402671026449, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: beatDetector
       value: 
@@ -1176,6 +1169,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abca73f847611e64a92df154357eaa1b, type: 3}
+--- !u!114 &4502476383624051386 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5914982271972619940, guid: abca73f847611e64a92df154357eaa1b, type: 3}
+  m_PrefabInstance: {fileID: 4502476383624051385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f20b44bf6e1464429c1a7acc2c65fc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
