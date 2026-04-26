@@ -5,13 +5,6 @@ public enum GameState { Idle, Playing, SongEnded, Results }
 
 /// <summary>
 /// Drives the top-level game flow: start -> playing -> end (win or lose) -> results scene.
-///
-/// Changes from original:
-///   - Reads AppSceneManager.SelectedLevel to configure BeatDetector's FMOD path.
-///   - Subscribes to PlayerManager.OnDeath for the lose condition.
-///   - On run end, builds a RunResultData and hands it to AppSceneManager.ShowResults()
-///     instead of showing an in-scene ResultsUI panel.
-///   - ResultsUI reference removed (that UI now lives in its own scene).
 /// </summary>
 public class GameStateManager : MonoBehaviour
 {
@@ -28,9 +21,7 @@ public class GameStateManager : MonoBehaviour
 
     public GameState State { get; private set; } = GameState.Idle;
 
-    private bool _runEnded; // guard against win and lose firing simultaneously
-
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
+    private bool _runEnded;
 
     private void Awake()
     {
@@ -40,10 +31,8 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
-        // Apply the level chosen on the level select screen
         ApplySelectedLevel();
 
-        // Subscribe to player death for the lose condition
         if (_playerManager != null)
             _playerManager.OnDeath.AddListener(OnPlayerDied);
         else
@@ -58,20 +47,12 @@ public class GameStateManager : MonoBehaviour
             _playerManager.OnDeath.RemoveListener(OnPlayerDied);
     }
 
-    // ── Level Config ──────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Reads the level selected on the level select screen and configures BeatDetector.
-    /// Safe if AppSceneManager doesn't exist (e.g. entering Play Mode directly
-    /// from the Gameplay scene in the editor - BeatDetector's default path is used).
-    /// </summary>
     private void ApplySelectedLevel()
     {
         var level = AppSceneManager.Instance?.SelectedLevel;
         if (level == null)
         {
-            Debug.LogWarning("[GameStateManager] No level selected via AppSceneManager. " +
-                             "Using BeatDetector's default musicEventPath.");
+            Debug.LogWarning("[GameStateManager] No level selected via AppSceneManager. Using BeatDetector's default musicEventPath.");
             return;
         }
 
@@ -79,9 +60,6 @@ public class GameStateManager : MonoBehaviour
             _beatDetector.musicEventPath = level.FmodEventPath;
     }
 
-    // ── Game Flow ─────────────────────────────────────────────────────────────
-
-    /// <summary>Begins music, spawning, and song-end polling.</summary>
     public void StartGame()
     {
         _runEnded = false;
@@ -91,10 +69,6 @@ public class GameStateManager : MonoBehaviour
         StartCoroutine(WatchForSongEnd());
     }
 
-    /// <summary>
-    /// Polls BeatDetector.IsPlaying each frame.
-    /// One frame is skipped on start to allow IsPlaying to be set.
-    /// </summary>
     private IEnumerator WatchForSongEnd()
     {
         yield return null;
@@ -109,9 +83,6 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    // ── End Conditions ────────────────────────────────────────────────────────
-
-    /// <summary>Lose condition - fired by PlayerManager.OnDeath.</summary>
     private void OnPlayerDied() => OnRunEnded(isWin: false);
 
     private void OnRunEnded(bool isWin)
@@ -133,13 +104,12 @@ public class GameStateManager : MonoBehaviour
 
         int score = ScoreManager.Instance != null ? ScoreManager.Instance.TotalScore : 0;
         int combo = ScoreManager.Instance != null ? ScoreManager.Instance.Combo      : 0;
-        int stars = StarRatingCalculator.Calculate(score);
 
         var result = new RunResultData
         {
             IsWin = isWin,
             Score = score,
-            Stars = stars,
+            Grade = RunResultData.CalculateGrade(score),
             Combo = combo,
             Level = AppSceneManager.Instance?.SelectedLevel
         };

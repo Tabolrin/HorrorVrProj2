@@ -1116,6 +1116,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 620459708389199416, guid: abca73f847611e64a92df154357eaa1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.496
+      objectReference: {fileID: 0}
     - target: {fileID: 1177413452435092597, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -1124,6 +1128,10 @@ PrefabInstance:
       propertyPath: _toggleUIAction
       value: 
       objectReference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 2089153389241696012, guid: abca73f847611e64a92df154357eaa1b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3004915295239767018, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -1140,6 +1148,10 @@ PrefabInstance:
       propertyPath: beatDetector
       value: 
       objectReference: {fileID: 673555996}
+    - target: {fileID: 3169385429840648569, guid: abca73f847611e64a92df154357eaa1b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3953051295931191717, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
