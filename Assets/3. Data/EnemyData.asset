@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b19179b856fc5244999cecb7b2fb0a2, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  moveSpeed: 4
-  arrivedThreshold: 0.2
   rotationSpeed: 5
   maxHealth: 3
-  shootInterval: 1.5
+  shootInterval: 2
   projectileDamage: 1
