@@ -23,13 +23,21 @@ public class LaserShot : MonoBehaviour
     [Header("Haptics")]
     [SerializeField] private XRNode _hand = XRNode.RightHand;
 
+    [Header("Tuning")]
+    [Tooltip("Minimum distance the shot must travel before hit detection activates. Prevents the shot immediately hitting the gun or player geometry on spawn.")]
+    [SerializeField] private float _minTravelDistance = 0.4f;
+
     private float   _spawnTime;
     private Vector3 _prevPosition;
+    private Vector3 _spawnPosition;
+    private bool    _hasHit;
 
     private void OnEnable()
     {
-        _spawnTime    = Time.time;
-        _prevPosition = transform.position;
+        _spawnTime     = Time.time;
+        _prevPosition  = transform.position;
+        _spawnPosition = transform.position;
+        _hasHit        = false;
 
         if (_enemyLayer.value == 0)
             Debug.LogWarning("[LaserShot] Enemy layer mask not set - shots will not register hits.");
@@ -37,33 +45,42 @@ public class LaserShot : MonoBehaviour
 
     private void Update()
     {
+        if (_hasHit) return;
+
         if (Time.time - _spawnTime >= _maxLifetime)
         {
+            // Shot expired without hitting anything - break combo
+            ScoreManager.Instance?.RegisterMiss();
             ReturnToPool();
             return;
         }
 
-        float stepDistance = _speed * Time.deltaTime;
+        float stepDistance   = _speed * Time.deltaTime;
+        float travelledSoFar = Vector3.Distance(_spawnPosition, _prevPosition);
 
-        if (Physics.Raycast(_prevPosition, transform.forward, out RaycastHit hit, stepDistance, _enemyLayer))
+        if (travelledSoFar >= _minTravelDistance)
         {
-            var enemy = hit.collider.GetComponent<Enemy>();
-            if (enemy != null && !enemy.IsDead)
+            if (Physics.Raycast(_prevPosition, transform.forward, out RaycastHit hit, stepDistance, _enemyLayer))
             {
-                transform.position = hit.point;
+                var enemy = hit.collider.GetComponent<Enemy>();
+                if (enemy != null && !enemy.IsDead)
+                {
+                    _hasHit            = true;
+                    transform.position = hit.point;
 
-                bool wasDeadBefore = enemy.IsDead;
-                enemy.TakeHit(_damage);
-                bool justKilled = !wasDeadBefore && enemy.IsDead;
+                    bool wasDeadBefore = enemy.IsDead;
+                    enemy.TakeHit(_damage);
+                    bool justKilled = !wasDeadBefore && enemy.IsDead;
 
-                ScoreManager.Instance?.RegisterHit(justKilled);
-                HapticManager.Instance?.Play(_hand, HapticType.Hit);
+                    ScoreManager.Instance?.RegisterHit(justKilled);
+                    HapticManager.Instance?.Play(_hand, HapticType.Hit);
 
 #if UNITY_EDITOR
-                Debug.DrawRay(_prevPosition, transform.forward * stepDistance, Color.green, 0.5f);
+                    Debug.DrawRay(_prevPosition, transform.forward * stepDistance, Color.green, 0.5f);
 #endif
-                ReturnToPool();
-                return;
+                    ReturnToPool();
+                    return;
+                }
             }
         }
 
@@ -71,7 +88,7 @@ public class LaserShot : MonoBehaviour
         Debug.DrawRay(_prevPosition, transform.forward * stepDistance, Color.cyan);
 #endif
 
-        Vector3 newPos = _prevPosition + transform.forward * stepDistance;
+        Vector3 newPos     = _prevPosition + transform.forward * stepDistance;
         transform.position = newPos;
         _prevPosition      = newPos;
     }

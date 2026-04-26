@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b19179b856fc5244999cecb7b2fb0a2, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  rotationSpeed: 5
-  maxHealth: 3
+  rotationSpeed: 100
+  maxHealth: 1
   shootInterval: 2
   projectileDamage: 1

@@ -52,7 +52,20 @@ public class BeatDetector : MonoBehaviour
     public float CurrentBpm        { get; private set; }
     public float LastBeatTime      { get; private set; }
     public float NextBeatPredicted { get; private set; }
-    public bool  IsPlaying         { get; private set; }
+
+    // IsPlaying now polls the FMOD instance directly so natural song end
+    // is detected automatically without requiring an explicit StopMusic() call.
+    public bool IsPlaying
+    {
+        get
+        {
+            if (!_musicInstance.isValid()) return false;
+            _musicInstance.getPlaybackState(out PLAYBACK_STATE state);
+            return state != PLAYBACK_STATE.STOPPED && state != PLAYBACK_STATE.STOPPING;
+        }
+    }
+
+    private bool _started;
 
     private EventInstance _musicInstance;
     private DSP           _fftDsp;
@@ -118,14 +131,10 @@ public class BeatDetector : MonoBehaviour
         _fftDsp.setParameterInt((int)DSP_FFT.WINDOWTYPE, 0);
         _masterGroup.addDSP(CHANNELCONTROL_DSP_INDEX.TAIL, _fftDsp);
         _fftDsp.setActive(true);
-
-        IsPlaying = true;
     }
 
     public void StopMusic()
     {
-        IsPlaying = false;
-
         if (_fftDsp.hasHandle())
         {
             _masterGroup.removeDSP(_fftDsp);
@@ -194,10 +203,6 @@ public class BeatDetector : MonoBehaviour
         OnBeatDetected?.Invoke();
     }
 
-    /// <summary>
-    /// Estimates BPM from recent beat intervals.
-    /// Only intervals in the 30-300 BPM range (0.2s-2.0s) are included.
-    /// </summary>
     private void EstimateBpm()
     {
         if (_beatCount < 4) return;
@@ -208,8 +213,8 @@ public class BeatDetector : MonoBehaviour
 
         for (int i = 1; i <= limit; i++)
         {
-            int curr     = (_beatWriteIndex - i     + MaxBeatHistory) % MaxBeatHistory;
-            int prev     = (_beatWriteIndex - i - 1 + MaxBeatHistory) % MaxBeatHistory;
+            int curr       = (_beatWriteIndex - i     + MaxBeatHistory) % MaxBeatHistory;
+            int prev       = (_beatWriteIndex - i - 1 + MaxBeatHistory) % MaxBeatHistory;
             float interval = _beatTimestamps[curr] - _beatTimestamps[prev];
             if (interval > 0.2f && interval < 2.0f) { total += interval; count++; }
         }
@@ -234,11 +239,6 @@ public class BeatDetector : MonoBehaviour
 
     #region Scoring API
 
-    /// <summary>
-    /// Evaluates how close a shot was to the nearest beat.
-    /// Returns a BeatScore with a rating and score multiplier.
-    /// Called by BeatScoreManager.RegisterHit().
-    /// </summary>
     public BeatScore EvaluateShot()
     {
         float now           = Time.time;
