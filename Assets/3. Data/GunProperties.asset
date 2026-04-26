@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GunProperties
   m_EditorClassIdentifier: Assembly-CSharp::GunProperties
   Range: 100
-  MaxAmmo: 10
+  MaxAmmo: 10000
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 256

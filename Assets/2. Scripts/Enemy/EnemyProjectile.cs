@@ -1,9 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Pooled enemy projectile. Uses a per-frame sweep raycast to prevent tunneling
-/// through thin colliders at high speed.
-/// Add to PoolConfigSO with id "EnemyProjectile".
+/// Pooled enemy projectile. Uses a per-frame SphereCast sweep to prevent tunneling
+/// and to require actual overlap with the player's head collider.
 /// </summary>
 public class EnemyProjectile : MonoBehaviour
 {
@@ -13,9 +12,12 @@ public class EnemyProjectile : MonoBehaviour
     [Header("Lifetime")]
     [SerializeField] private float _maxLifetime = 5f;
 
-    [Header("Layer")]
-    [Tooltip("Layer the Player/XR Rig is on.")]
+    [Header("Detection")]
+    [Tooltip("Set to the PlayerHead layer only - not the whole rig. A collider on the Main Camera GameObject determines if the player dodged.")]
     [SerializeField] private LayerMask _playerLayer;
+
+    [Tooltip("Radius of the sweep cast. Should be slightly smaller than the head collider radius.")]
+    [SerializeField] private float _castRadius = 0.08f;
 
     private float   _damage;
     private float   _spawnTime;
@@ -56,7 +58,9 @@ public class EnemyProjectile : MonoBehaviour
 
         float stepDistance = _speed * Time.deltaTime;
 
-        if (Physics.Raycast(_prevPosition, _direction, out RaycastHit hit, stepDistance, _playerLayer))
+        // SphereCast requires actual spatial overlap with the head collider,
+        // making dodging meaningful.
+        if (Physics.SphereCast(_prevPosition, _castRadius, _direction, out RaycastHit hit, stepDistance, _playerLayer))
         {
             _hasHit = true;
             transform.position = hit.point;

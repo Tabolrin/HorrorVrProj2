@@ -164,7 +164,7 @@ MonoBehaviour:
   _maxLifetime: 5
   _playerLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
 --- !u!54 &8301319372139200751
 Rigidbody:
   m_ObjectHideFlags: 0
