@@ -31,9 +31,10 @@ public class PlayerManager : MonoBehaviour
         OnHealthChanged?.Invoke(CurrentHp, _stats.MaxHp);
     }
 
-    /// <summary>Reduces HP by amount. Fires OnDeath if HP reaches zero.</summary>
+    /// <summary>Reduces HP by amount. Fires OnDeath once if HP reaches zero.</summary>
     public void TakeDamage(float amount)
     {
+        if (CurrentHp <= 0f) return;
         CurrentHp = Mathf.Max(CurrentHp - amount, 0f);
         OnHealthChanged?.Invoke(CurrentHp, _stats.MaxHp);
         if (CurrentHp <= 0f) OnDeath?.Invoke();

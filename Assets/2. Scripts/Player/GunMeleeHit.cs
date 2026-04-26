@@ -23,24 +23,29 @@ public class GunMeleeHit : MonoBehaviour
     private float   _pruneTimer;
     private const float PruneInterval = 5f;
 
-    // Keyed by enemy instance ID to avoid stale references after pool resets
-    private readonly System.Collections.Generic.Dictionary<int, float> _cooldowns = new();
+    private readonly System.Collections.Generic.Dictionary<int, float> _cooldowns   = new();
+    private readonly System.Collections.Generic.List<int>              _pruneBuffer = new();
 
-    private void OnEnable() => _prevPosition = transform.position;
+    private void OnEnable()
+    {
+        _prevPosition = transform.position;
+        _currentSpeed = 0f;
+    }
 
     private void Update()
     {
         _currentSpeed = (transform.position - _prevPosition).magnitude / Time.deltaTime;
         _prevPosition = transform.position;
 
-        // Periodically remove expired cooldown entries to prevent unbounded growth
         _pruneTimer += Time.deltaTime;
         if (_pruneTimer >= PruneInterval)
         {
             _pruneTimer = 0f;
-            var keys = new System.Collections.Generic.List<int>(_cooldowns.Keys);
-            foreach (int k in keys)
-                if (_cooldowns[k] < Time.time) _cooldowns.Remove(k);
+            _pruneBuffer.Clear();
+            foreach (var kvp in _cooldowns)
+                if (kvp.Value < Time.time) _pruneBuffer.Add(kvp.Key);
+            foreach (int k in _pruneBuffer)
+                _cooldowns.Remove(k);
         }
     }
 
@@ -56,8 +61,11 @@ public class GunMeleeHit : MonoBehaviour
 
         _cooldowns[id] = Time.time + _hitCooldownPerEnemy;
 
+        bool wasDeadBefore = enemy.IsDead;
         enemy.TakeHit();
-        ScoreManager.Instance?.RegisterHit(enemy.IsDead);
+        bool justKilled = !wasDeadBefore && enemy.IsDead;
+
+        ScoreManager.Instance?.RegisterHit(justKilled);
         HapticManager.Instance?.Play(_hand, HapticType.MeleeHit);
     }
 }

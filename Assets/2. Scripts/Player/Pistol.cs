@@ -44,8 +44,6 @@ public class Pistol : MonoBehaviour
     {
         if (_isReloading) return;
         if (_gunProperties == null) return;
-        // FIX: Updated field references from _fireRate to FireRate to match
-        // the renamed public fields in GunProperties.
         if (_gunProperties.FireRate <= 0) return;
         if (Time.time - _lastFireTime < 1f / _gunProperties.FireRate) return;
 
@@ -69,6 +67,7 @@ public class Pistol : MonoBehaviour
         if (shot == null)
             Debug.LogWarning("[Pistol] LaserShot pool exhausted or pool ID not found.");
     }
+   
 
     /// <summary>Refills magazine. Called by ReloadZone when gun is holstered downward.</summary>
     public void Reload()

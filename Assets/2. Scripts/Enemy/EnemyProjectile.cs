@@ -1,9 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Pooled enemy projectile. Moves in a fixed direction set at launch time -
-/// not homing. Add to PoolConfigSO with id "EnemyProjectile".
-/// Requires a Trigger Collider on the prefab.
+/// Pooled enemy projectile. Uses a per-frame sweep raycast to prevent tunneling
+/// through thin colliders at high speed.
+/// Add to PoolConfigSO with id "EnemyProjectile".
 /// </summary>
 public class EnemyProjectile : MonoBehaviour
 {
@@ -20,12 +20,23 @@ public class EnemyProjectile : MonoBehaviour
     private float   _damage;
     private float   _spawnTime;
     private Vector3 _direction;
+    private Vector3 _prevPosition;
+    private bool    _hasHit;
 
-    private void OnEnable() => _spawnTime = Time.time;
+    private void OnEnable()
+    {
+        _spawnTime    = Time.time;
+        _direction    = Vector3.zero;
+        _hasHit       = false;
+        _prevPosition = transform.position;
+
+        if (_playerLayer.value == 0)
+            Debug.LogWarning("[EnemyProjectile] Player layer mask not set - projectiles will not hit player.");
+    }
 
     /// <summary>
-    /// Sets travel direction and damage. Called by Enemy.SpawnProjectile()
-    /// immediately after spawning. Direction is captured at fire time - not updated.
+    /// Sets travel direction and damage. Called by Enemy.SpawnProjectile() after spawning.
+    /// Direction is captured at fire time and does not update.
     /// </summary>
     public void Launch(Vector3 direction, float damage)
     {
@@ -35,17 +46,36 @@ public class EnemyProjectile : MonoBehaviour
 
     private void Update()
     {
-        if (_direction == Vector3.zero) return;
-        transform.position += _direction * (_speed * Time.deltaTime);
-        if (Time.time - _spawnTime >= _maxLifetime)
-            ReturnToPool();
-    }
+        if (_hasHit || _direction == Vector3.zero) return;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if ((_playerLayer.value & (1 << other.gameObject.layer)) == 0) return;
-        PlayerManager.Instance?.TakeDamage(_damage);
-        ReturnToPool();
+        if (Time.time - _spawnTime >= _maxLifetime)
+        {
+            ReturnToPool();
+            return;
+        }
+
+        float stepDistance = _speed * Time.deltaTime;
+
+        if (Physics.Raycast(_prevPosition, _direction, out RaycastHit hit, stepDistance, _playerLayer))
+        {
+            _hasHit = true;
+            transform.position = hit.point;
+            PlayerManager.Instance?.TakeDamage(_damage);
+
+#if UNITY_EDITOR
+            Debug.DrawRay(_prevPosition, _direction * stepDistance, Color.red, 0.5f);
+#endif
+            ReturnToPool();
+            return;
+        }
+
+#if UNITY_EDITOR
+        Debug.DrawRay(_prevPosition, _direction * stepDistance, Color.yellow);
+#endif
+
+        Vector3 newPos = _prevPosition + _direction * stepDistance;
+        transform.position = newPos;
+        _prevPosition      = newPos;
     }
 
     private void ReturnToPool()

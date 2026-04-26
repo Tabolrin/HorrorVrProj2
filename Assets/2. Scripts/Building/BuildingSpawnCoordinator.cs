@@ -21,8 +21,13 @@ public class BuildingSpawnCoordinator : MonoBehaviour
     private float _timer;
     private bool  _active;
 
-    public void StartSpawning() => _active = true;
-    public void StopSpawning()  => _active = false;
+    public void StartSpawning()
+    {
+        _active = true;
+        _timer  = 0f;
+    }
+
+    public void StopSpawning() => _active = false;
 
     private void Update()
     {
@@ -35,14 +40,13 @@ public class BuildingSpawnCoordinator : MonoBehaviour
         bool skipLeft  = Random.value < _skipChance;
         bool skipRight = Random.value < _skipChance;
 
-        // Guarantee at least one lane spawns per interval
         if (skipLeft && skipRight)
         {
             if (Random.value < 0.5f) skipLeft  = false;
             else                     skipRight = false;
         }
 
-        if (!skipLeft)  _leftSpawner.SpawnNext();
-        if (!skipRight) _rightSpawner.SpawnNext();
+        if (!skipLeft)  _leftSpawner?.SpawnNext();
+        if (!skipRight) _rightSpawner?.SpawnNext();
     }
 }

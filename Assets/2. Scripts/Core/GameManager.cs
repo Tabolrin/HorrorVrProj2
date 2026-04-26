@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Global singleton providing access to shared scene references.
-/// Persists across scene loads.
+/// Lives in the Gameplay scene only - does not persist across scene loads.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -12,8 +12,13 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }

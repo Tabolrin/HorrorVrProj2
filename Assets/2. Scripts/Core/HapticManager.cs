@@ -24,10 +24,34 @@ public class HapticManager : MonoBehaviour
     [Range(0f, 1f)] public float missAmplitude = 0.2f;
     public float missDuration = 0.05f;
 
+    private InputDevice _rightDevice;
+    private InputDevice _leftDevice;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        InputDevices.deviceConnected    += OnDeviceChanged;
+        InputDevices.deviceDisconnected += OnDeviceChanged;
+        RefreshDevices();
+    }
+
+    private void OnDisable()
+    {
+        InputDevices.deviceConnected    -= OnDeviceChanged;
+        InputDevices.deviceDisconnected -= OnDeviceChanged;
+    }
+
+    private void OnDeviceChanged(InputDevice _) => RefreshDevices();
+
+    private void RefreshDevices()
+    {
+        _rightDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        _leftDevice  = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
     }
 
     /// <summary>Sends a haptic impulse to the specified hand controller.</summary>
@@ -41,7 +65,8 @@ public class HapticManager : MonoBehaviour
             default:                  amp = missAmplitude;  dur = missDuration;  break;
         }
 
-        // SendHapticImpulse(channel, amplitude, duration) - channel 0 = default
-        InputDevices.GetDeviceAtXRNode(hand).SendHapticImpulse(0, amp, dur);
+        InputDevice device = hand == XRNode.RightHand ? _rightDevice : _leftDevice;
+        if (device.isValid)
+            device.SendHapticImpulse(0, amp, dur);
     }
 }

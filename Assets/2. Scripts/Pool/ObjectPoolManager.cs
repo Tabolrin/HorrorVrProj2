@@ -13,25 +13,21 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private PoolConfigSO config;
     [SerializeField] private bool buildOnAwake = true;
 
-    private readonly Dictionary<string, PoolRuntime> _pools = new();
-    // Cache PooledInstance components by instance ID to avoid GetComponent on every return
+    private readonly Dictionary<string, PoolRuntime> _pools         = new();
     private readonly Dictionary<int, PooledInstance> _instanceCache = new();
     private Transform _root;
 
     private class PoolRuntime
     {
-        public readonly Queue<GameObject> inactive = new();
+        public readonly Queue<GameObject> inactive    = new();
+        public readonly HashSet<int>      inactiveIds = new();
         public GameObject prefab;
         public int maxInScene;
-        public int maxActive; // 0 = unlimited
+        public int maxActive;
         public int totalCreated;
         public int activeCount;
     }
 
-    /// <summary>
-    /// Tracks which pool an instance belongs to.
-    /// Added automatically to every pooled object at creation time.
-    /// </summary>
     private class PooledInstance : MonoBehaviour
     {
         public string poolId;
@@ -49,6 +45,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         config = cfg;
         _pools.Clear();
+        _instanceCache.Clear();
 
         _root = config != null && config.poolRoot != null
             ? config.poolRoot
@@ -81,14 +78,14 @@ public class ObjectPoolManager : MonoBehaviour
 
             _pools.Add(entry.id, rt);
 
-            // Pre-warm: create instances up front and place them in the inactive queue
             int count = Mathf.Clamp(entry.prewarmCount, 0,
                 rt.maxInScene == 0 ? entry.prewarmCount : rt.maxInScene);
+
             for (int i = 0; i < count; i++)
             {
                 var go = CreateInstance(entry.id, rt);
                 if (go == null) break;
-                ReturnToPool(go);
+                EnqueueInactive(go, rt);
             }
         }
     }
@@ -109,7 +106,10 @@ public class ObjectPoolManager : MonoBehaviour
 
         GameObject go = null;
         while (pool.inactive.Count > 0 && go == null)
+        {
             go = pool.inactive.Dequeue();
+            if (go != null) pool.inactiveIds.Remove(go.GetInstanceID());
+        }
 
         if (go == null)
         {
@@ -142,9 +142,21 @@ public class ObjectPoolManager : MonoBehaviour
             return;
         }
 
+        if (pool.inactiveIds.Contains(go.GetInstanceID()))
+        {
+            Debug.LogWarning($"[ObjectPoolManager] ReturnToPool called twice on '{go.name}'. Ignoring.");
+            return;
+        }
+
         pool.activeCount = Mathf.Max(0, pool.activeCount - 1);
         go.SetActive(false);
         go.transform.SetParent(_root, worldPositionStays: false);
+        EnqueueInactive(go, pool);
+    }
+
+    private void EnqueueInactive(GameObject go, PoolRuntime pool)
+    {
+        pool.inactiveIds.Add(go.GetInstanceID());
         pool.inactive.Enqueue(go);
     }
 
@@ -152,10 +164,10 @@ public class ObjectPoolManager : MonoBehaviour
     {
         if (pool.prefab == null) return null;
 
-        var go   = Instantiate(pool.prefab, _root);
-        go.name  = $"{pool.prefab.name} (Pooled:{id})";
+        var go  = Instantiate(pool.prefab, _root);
+        go.name = $"{pool.prefab.name} (Pooled:{id})";
 
-        var tag  = go.GetComponent<PooledInstance>() ?? go.AddComponent<PooledInstance>();
+        var tag = go.GetComponent<PooledInstance>() ?? go.AddComponent<PooledInstance>();
         tag.poolId = id;
         _instanceCache[go.GetInstanceID()] = tag;
 

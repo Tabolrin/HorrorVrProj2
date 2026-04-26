@@ -24,7 +24,7 @@ public class BuildingSpawner : MonoBehaviour
 
     private struct ActiveBuilding
     {
-        public GameObject go;
+        public GameObject   go;
         public BuildingUnit unit;
     }
 
@@ -35,15 +35,18 @@ public class BuildingSpawner : MonoBehaviour
         if (ObjectPoolManager.Instance == null || _returnThreshold == null) return;
 
         float thresholdZ = _returnThreshold.position.z;
+        float moveDelta  = _moveSpeed * Time.deltaTime;
 
         for (int i = _active.Count - 1; i >= 0; i--)
         {
             var ab = _active[i];
             if (ab.go == null) { _active.RemoveAt(i); continue; }
 
-            ab.go.transform.position += Vector3.back * (_moveSpeed * Time.deltaTime);
+            Vector3 pos = ab.go.transform.position;
+            pos.z -= moveDelta;
+            ab.go.transform.position = pos;
 
-            if (ab.go.transform.position.z <= thresholdZ)
+            if (pos.z <= thresholdZ)
             {
                 ObjectPoolManager.Instance.ReturnToPool(ab.go);
                 _active.RemoveAt(i);
@@ -71,7 +74,6 @@ public class BuildingSpawner : MonoBehaviour
             unit.ResetBuilding();
         }
 
-        // Rotate building to face inward based on lane side
         switch (SpawnSide)
         {
             case Side.Left:
@@ -86,7 +88,8 @@ public class BuildingSpawner : MonoBehaviour
         _active.Add(new ActiveBuilding { go = go, unit = unit });
     }
 
-    private void OnDisable()
+    /// <summary>Returns all active buildings to pool.</summary>
+    public void ReturnAllToPool()
     {
         if (ObjectPoolManager.Instance == null) return;
         for (int i = _active.Count - 1; i >= 0; i--)
@@ -94,4 +97,6 @@ public class BuildingSpawner : MonoBehaviour
                 ObjectPoolManager.Instance.ReturnToPool(_active[i].go);
         _active.Clear();
     }
+
+    private void OnDisable() => ReturnAllToPool();
 }

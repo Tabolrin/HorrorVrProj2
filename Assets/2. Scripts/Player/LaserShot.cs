@@ -30,6 +30,7 @@ public class LaserShot : MonoBehaviour
     {
         _spawnTime    = Time.time;
         _prevPosition = transform.position;
+
         if (_enemyLayer.value == 0)
             Debug.LogWarning("[LaserShot] Enemy layer mask not set - shots will not register hits.");
     }
@@ -44,23 +45,35 @@ public class LaserShot : MonoBehaviour
 
         float stepDistance = _speed * Time.deltaTime;
 
-        // Sweep ray from previous to current position to catch fast-moving hits
         if (Physics.Raycast(_prevPosition, transform.forward, out RaycastHit hit, stepDistance, _enemyLayer))
         {
             var enemy = hit.collider.GetComponent<Enemy>();
             if (enemy != null && !enemy.IsDead)
             {
                 transform.position = hit.point;
+
+                bool wasDeadBefore = enemy.IsDead;
                 enemy.TakeHit(_damage);
-                ScoreManager.Instance?.RegisterHit(enemy.IsDead);
+                bool justKilled = !wasDeadBefore && enemy.IsDead;
+
+                ScoreManager.Instance?.RegisterHit(justKilled);
                 HapticManager.Instance?.Play(_hand, HapticType.Hit);
+
+#if UNITY_EDITOR
+                Debug.DrawRay(_prevPosition, transform.forward * stepDistance, Color.green, 0.5f);
+#endif
                 ReturnToPool();
                 return;
             }
         }
 
-        transform.position += transform.forward * stepDistance;
-        _prevPosition = transform.position;
+#if UNITY_EDITOR
+        Debug.DrawRay(_prevPosition, transform.forward * stepDistance, Color.cyan);
+#endif
+
+        Vector3 newPos = _prevPosition + transform.forward * stepDistance;
+        transform.position = newPos;
+        _prevPosition      = newPos;
     }
 
     private void ReturnToPool()

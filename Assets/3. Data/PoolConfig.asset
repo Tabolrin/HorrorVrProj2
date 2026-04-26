@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoolConfigSO
   entries:
   - id: PlayerProjectile
-    prefab: {fileID: 136330, guid: d03829909525425468b4e16e7bcbd092, type: 3}
+    prefab: {fileID: 4333667949518125781, guid: de6943c2c4ca2b540bba9c2251a3cc12, type: 3}
     prewarmCount: 30
     maxInScene: 20
     maxActive: 15
@@ -68,8 +68,8 @@ MonoBehaviour:
     prewarmCount: 7
     maxInScene: 10
     maxActive: 5
-  - id: EnemyShot
-    prefab: {fileID: 136330, guid: 395831e7b971ab448a720e015abe719c, type: 3}
+  - id: EnemyProjectile
+    prefab: {fileID: 7870821881370380426, guid: 79fbfc95c230dd3419df61a3b650927d, type: 3}
     prewarmCount: 10
     maxInScene: 30
     maxActive: 20

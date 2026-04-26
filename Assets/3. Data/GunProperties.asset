@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f98e509f385564409103e5b9a7f4991, type: 3}
   m_Name: GunProperties
   m_EditorClassIdentifier: Assembly-CSharp::GunProperties
-  _range: 30
-  _maxAmmo: 6
-  enemyLayer:
+  Range: 100
+  MaxAmmo: 6
+  EnemyLayer:
     serializedVersion: 2
     m_Bits: 256
-  _fireRate: 4
+  FireRate: 5

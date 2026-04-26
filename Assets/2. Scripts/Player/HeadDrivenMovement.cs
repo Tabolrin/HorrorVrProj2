@@ -16,16 +16,20 @@ public class HeadDrivenMovement : MonoBehaviour
     [Tooltip("1 = true 1:1 with real movement. Values above 1 exaggerate the dodge.")]
     [SerializeField] private float _movementScale = 1f;
 
-    [Tooltip("Max drift in meters from world origin on each axis.")]
+    [Tooltip("Max drift in meters from start position on each axis.")]
     [SerializeField] private float _maxDriftX = 1.5f;
     [SerializeField] private float _maxDriftZ = 0.8f;
 
     private Vector3 _prevHeadLocalPos;
+    private Vector3 _startPosition;
+    private bool    _initialized;
 
     private void Start()
     {
         if (_head == null)
             _head = Camera.main.transform;
+
+        _startPosition    = transform.position;
         _prevHeadLocalPos = _head.localPosition;
     }
 
@@ -33,15 +37,20 @@ public class HeadDrivenMovement : MonoBehaviour
     {
         if (_head == null) return;
 
-        // Delta in local rig space - isolates physical head movement from rig movement
+        if (!_initialized)
+        {
+            _prevHeadLocalPos = _head.localPosition;
+            _initialized = true;
+            return;
+        }
+
         Vector3 delta     = _head.localPosition - _prevHeadLocalPos;
         _prevHeadLocalPos = _head.localPosition;
 
         Vector3 newPos = transform.position + new Vector3(delta.x, 0f, delta.z) * _movementScale;
 
-        // Clamp relative to world origin (player starts at 0,0,0)
-        newPos.x = Mathf.Clamp(newPos.x, -_maxDriftX, _maxDriftX);
-        newPos.z = Mathf.Clamp(newPos.z, -_maxDriftZ, _maxDriftZ);
+        newPos.x = Mathf.Clamp(newPos.x, _startPosition.x - _maxDriftX, _startPosition.x + _maxDriftX);
+        newPos.z = Mathf.Clamp(newPos.z, _startPosition.z - _maxDriftZ, _startPosition.z + _maxDriftZ);
 
         transform.position = newPos;
     }

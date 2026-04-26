@@ -20,7 +20,6 @@ public class Enemy : MonoBehaviour
     [Header("Animator")]
     [SerializeField] private Animator _animator;
 
-    // Pre-hashed animator parameter IDs for performance
     private static readonly int HashIsActive = Animator.StringToHash("IsActive");
     private static readonly int HashShoot    = Animator.StringToHash("Shoot");
 
@@ -31,20 +30,15 @@ public class Enemy : MonoBehaviour
 
     public bool IsDead { get; private set; }
 
-    // FIX: OnEnable no longer calls ResetEnemy directly.
-    // ResetEnemy is called by BuildingUnit.ResetBuilding() BEFORE SetActive(true),
-    // so _player is already assigned when OnEnable fires. This prevents
-    // the throw during pool pre-warming when GameManager may not exist yet.
     private void OnEnable()
     {
-        // Re-acquire player reference in case GameManager wasn't ready at pre-warm time
         if (_player == null && GameManager.Instance != null)
             _player = GameManager.Instance.Player;
     }
 
     /// <summary>
     /// Resets all enemy state. Called by BuildingUnit.ResetBuilding() before SetActive(true).
-    /// Returns false if GameManager is not ready yet (safe - enemy stays inert).
+    /// Returns false if GameManager is not ready yet - enemy stays inert.
     /// </summary>
     public bool ResetEnemy()
     {
@@ -67,7 +61,6 @@ public class Enemy : MonoBehaviour
     {
         if (IsDead || !_playerInRange) return;
 
-        // Safety: if _player was null at reset time, try to acquire it now
         if (_player == null)
         {
             if (GameManager.Instance != null) _player = GameManager.Instance.Player;
@@ -101,7 +94,7 @@ public class Enemy : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
-            Quaternion.LookRotation(dir.normalized),
+            Quaternion.LookRotation(dir),
             data.rotationSpeed * Time.deltaTime);
     }
 
@@ -111,14 +104,13 @@ public class Enemy : MonoBehaviour
         if (_shootTimer < data.shootInterval) return;
         _shootTimer = 0f;
         _animator?.SetTrigger(HashShoot);
-        // Remove this call and use an Animation Event on the Shoot clip instead for visual sync
         SpawnProjectile();
     }
 
     /// <summary>
-    /// Spawns a projectile aimed at the player's position at the moment of firing.
-    /// Can alternatively be called from an Animation Event on the Shoot clip.
-    /// If so, remove the direct call in HandleShooting to avoid double-firing.
+    /// Spawns a projectile aimed at the player's current position.
+    /// Can be called from an Animation Event on the Shoot clip instead of HandleShooting.
+    /// If using Animation Event, remove the SpawnProjectile() call in HandleShooting to avoid double-firing.
     /// </summary>
     public void SpawnProjectile()
     {
@@ -144,7 +136,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        IsDead = true;
+        IsDead         = true;
+        _playerInRange = false;
         gameObject.SetActive(false);
     }
 
