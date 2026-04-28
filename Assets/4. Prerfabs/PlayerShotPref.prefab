@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a7e3ce46bfce343826dc959053f41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaserShot
-  _speed: 20
+  _speed: 55
   _maxLifetime: 4
   _damage: 1
   _enemyLayer:
