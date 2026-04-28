@@ -1216,7 +1216,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.15
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2089412145
 PrefabInstance:
@@ -1381,11 +1381,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2089153389241696012, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: _maxDriftX
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2089153389241696012, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: _maxDriftZ
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2089153389241696012, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: _movementScale
@@ -1405,7 +1405,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2520062224796955263, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: _magazineSize
-      value: 1000
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 2627712049417148213, guid: abca73f847611e64a92df154357eaa1b, type: 3}
       propertyPath: m_Radius

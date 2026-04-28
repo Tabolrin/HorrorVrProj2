@@ -75,6 +75,7 @@ MonoBehaviour:
   side: 0
   _projectilePoolId: EnemyProjectile
   _shootPoint: {fileID: 6214772843990063153}
+  _maxShots: 1
   _animator: {fileID: 4673914342643361629}
 --- !u!54 &3124864452122046779
 Rigidbody:

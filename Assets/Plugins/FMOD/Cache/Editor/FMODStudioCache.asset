@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: Assets/sound/VR_rvolver_Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639087449495163699
+  lastModified: 639111670335344673
   FileSizes:
   - Name: Desktop
     Value: 4167904
@@ -91,7 +91,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 8170377778961886873}
   cacheVersion: 131858
-  cacheTime: 639087449495173707
+  cacheTime: 639111670335344673
   SerializableEventsDict:
   - key: event:/test
     index: 0
@@ -213,7 +213,7 @@ MonoBehaviour:
   Path: Assets/sound/VR_rvolver_Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639087449495173707
+  lastModified: 639111670335344673
   FileSizes:
   - Name: Desktop
     Value: 862
